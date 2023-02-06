@@ -7,3 +7,18 @@
     height: 500px;
     overflow: hidden;
 }
+
+.gallery {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 400px;
+}
+.thumb {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 120px;
+    height: 120px;
+}
