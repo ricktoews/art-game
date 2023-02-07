@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { saveArtSelections, getArtSelections } from "./utils/helpers";
+import { saveArtSelections, getArtSelections } from "../utils/helpers";
 
 function ArtLabel(props) {
   const { art } = props;
   return (
     <div className="absolute bg-white border-black p-3">
-      <div>{art.name}</div>
+      <div className="text-black">{art.name}</div>
     </div>
   );
 }

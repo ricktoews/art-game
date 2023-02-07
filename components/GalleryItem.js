@@ -1,4 +1,4 @@
-import { FRAME_HEIGHT, FRAME_WIDTH } from "@/pages/utils/helpers";
+import { FRAME_HEIGHT, FRAME_WIDTH } from "@/utils/helpers";
 export function GalleryItem(props) {
   const { itemkey, item, handleItemClick } = props;
 

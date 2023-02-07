@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { GalleryItem } from "@/components/GalleryItem";
-import { saveArtSelections, getArtSelections } from "./utils/helpers";
+import { saveArtSelections, getArtSelections } from "../utils/helpers";
 import styles from "@/styles/ArtGame.module.css";
 import Art from "@/data/art";
 console.log(Art);

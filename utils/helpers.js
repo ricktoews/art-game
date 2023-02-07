@@ -1,3 +1,5 @@
+import Art from '@/data/art';
+
 export const FRAME_WIDTH = 100;
 export const FRAME_HEIGHT = 100;
 
