@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { saveArtSelections, getArtSelections } from "../utils/helpers";
 
+
 function ArtLabel(props) {
   const { art } = props;
   return (
@@ -11,38 +12,60 @@ function ArtLabel(props) {
   );
 }
 
+function selectArtForTraining(ArtSelections, ndx) {
+  const randomArt = ArtSelections[ndx];
+  console.log('====> Random art', randomArt, ndx);
+  return randomArt;
+}
+
 export default function Train() {
+  const [ArtSelections, setArtSelections] = useState([]);
+  const [trainingNdx, setTrainingNdx] = useState();
   const [trainArt, setTrainArt] = useState(null);
-  const [refresh, setRefresh] = useState();
-  const artEl = useRef();
-  const artNameRef = useRef();
+  const artEl = useRef(null);
+  const artNameRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
-    const artSelections = getArtSelections();
-    const selected = artSelections.filter((item) => item.selected);
-    const ndx = Math.floor(Math.random() * selected.length);
-    const randomArt = selected[ndx];
-    console.log("====> selectedArt", randomArt);
-    setTrainArt(randomArt);
-    setRefresh(false);
-  }, [refresh]);
+    let items = getArtSelections();
+    items = items.filter(item => item.selected);
+    setArtSelections(items);
+    setTrainingNdx(0);
+  }, []);
+
+  useEffect(() => {
+    if (ArtSelections.length > 0) {
+      const randomArt = selectArtForTraining(ArtSelections, trainingNdx);
+      if (artNameRef.current) {
+        let artField = artNameRef.current;
+        artField.value = '';
+        artField.focus();
+      }
+      setTrainArt(randomArt);
+      }
+  }, [trainingNdx]);
 
   const handleGalleryClick = (e) => {
     router.push("./gallery");
   };
 
   const handleCheckInput = (e) => {
+    e.preventDefault();
     const el = e.target;
     const entry = el.value;
     if (entry === trainArt.name) {
-      setRefresh(true);
+      let ndx = trainingNdx + 1;
+      if (ndx >= ArtSelections.length) {
+        ndx = 0;
+      }
+      setTrainingNdx(ndx);
     }
-    console.log("====> handleCheckInput", entry, trainArt.src);
   };
 
   if (!trainArt) return null;
 
+
+  
   return (
     <div className="flex w-2/4 flex-col">
       <div className="flex justify-between">
@@ -53,19 +76,20 @@ export default function Train() {
           Gallery
         </button>
       </div>
-      <div class="relative flex justify-center">
-        <div class="mb-3 xl:w-96">
+      <div className="relative flex justify-center">
+        <div className="mb-3 xl:w-96">
           <label
-            for="exampleFormControlInput1"
-            class="form-label inline-block mb-2 text-gray-700"
+            htmlFor="exampleFormControlInput1"
+            className="form-label inline-block mb-2 text-gray-700"
           >
             Copy name of artwork
           </label>
           <input
             ref={artNameRef}
+            autoComplete="off"
             type="text"
             onBlur={handleCheckInput}
-            class="
+            className="
         form-control
         block
         w-full
