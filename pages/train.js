@@ -117,7 +117,7 @@ export default function Train() {
     <div className="bg-white text-black">
       <div className="relative bg-black text-white">
         <div className="flex justify-around">
-          <a href="./gallery">Gallery</a>
+          <a href="./">Gallery</a>
         </div>
       </div>
       <div className="relative flex flex-col items-center">
