@@ -3,7 +3,7 @@ const artwork = [
     { src: 'a-sunday-afternoon-on-the-island-of-la-grande-jatte.jpeg', name: 'A Sunday Afternoon on the Island of La Grande Jatte', artist: 'Georges Seurat', date: '1886' },
     { src: 'arrangement-in-grey-and-black-no-1.jpeg', name: "Whistler's Mother", artist: 'James Abbott McNeill Whistler', date: '1871' },
     { src: 'les-demoiselles-d-avignon.jpeg', name: "Les Demoiselles d'Avignon", artist: 'Pablo Picasso', date: '1907' },
-    { src: 'mona-lisa.jpeg', name: 'Mona Lisa', artist: 'Leonardo da Vinci' },
+    { src: 'mona-lisa.jpeg', name: 'Mona Lisa', artist: 'Leonardo da Vinci', date: '1503' },
     { src: 'starry-night.jpeg', name: 'The Starry Night', artist: 'Vincent van Gogh', date: '1889' },
     { src: 'the-arnolfini-portrait.jpeg', name: 'Arnolfini Portrait', artist: 'Jan van Eyck', date: '1434' },
     { src: 'the-birth-of-venus.jpeg', name: 'The Birth of Venus', artist: 'Sandro Botticelli', date: '1486' },

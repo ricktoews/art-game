@@ -49,21 +49,17 @@ export default function Gallery() {
   };
 
   if (!ArtSelections) return null;
-
+console.log('====> ArtSelections', ArtSelections);
   return (
-    <div className="flex w-2/4 flex-col">
-      <div className="flex justify-between">
-        <button
-          className="rounded-md bg-blue-500 px-4 py-2 text-white"
-          onClick={handleTrainClick}
-        >
-          Train
-        </button>
-        <button className="rounded-md bg-blue-500 px-4 py-2 text-white">
-          Learn
-        </button>
+    <div className="bg-white text-black">
+      <div className="relative bg-black text-white">
+        <div className="flex justify-around">
+          <div><a href="./train">Train</a></div>
+          <div><a href="./learn">Learn</a></div>
+        </div>
       </div>
-      <div className="flex flex-wrap">
+
+      <div className="flex justify-center flex-wrap">
         {ArtSelections.map((item, key) => {
           return (
             <GalleryItem

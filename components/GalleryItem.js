@@ -8,7 +8,7 @@ export function GalleryItem(props) {
   };
   const identifier = item.name;
   const selectedItem = item.selected ? "bg-orange-100" : "bg-white";
-  const itemClass = `flex flex-col items-center w-1/5 py-3 ${selectedItem} cursor-pointer hover:bg-slate-200`;
+  const itemClass = `flex flex-col justify-center items-center p-4 ${selectedItem} cursor-pointer`;
 
   return (
     <div
@@ -20,8 +20,10 @@ export function GalleryItem(props) {
       <div>
         <img className="drop-shadow-lg" src={item.src} style={thumbStyle} />
       </div>
-      <div className="text-center text-black">{item.name}</div>
-      <div className="text-center text-black">{item.date}</div>
+      <div className="hidden">
+        <div className="text-center text-black">{item.name}</div>
+        <div className="text-center text-black">{item.date}</div>
+      </div>
     </div>
   );
 }
