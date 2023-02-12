@@ -4,6 +4,15 @@ import { MAX_HEIGHT, MAX_WIDTH, makeProportionate, saveArtSelections, getArtSele
 import { Artifika } from "@next/font/google";
 
 
+function isAnswerCorrect(actual, expected) {
+  console.log('====> isAnswerCorrect', actual, expected);
+  let result = false;
+  if (actual && expected) {
+    result = actual.toLowerCase() === expected.toLowerCase();
+  }
+  return result;
+}
+
 function ArtLabel(props) {
   const { art } = props;
   return (
@@ -82,14 +91,15 @@ export default function Train() {
     const entry = el.value;
     const field = el.dataset.fieldname;
     answers[field] = entry;
-    console.log('====> handleCheckField answers', answers);
     let count = 0;
     fieldsToCheck.forEach(item => {
-      if (answers[item] === trainArt[item]) {
-        // correct
+      // Is field correct?
+      if (isAnswerCorrect(answers[item], trainArt[item])) {
         count++;
       }
     });
+
+    // If all fields have been entered, check them.
     if (count === fieldsToCheck.length) {
       let ndx = trainingNdx + 1;
       if (ndx >= ArtSelections.length) {
@@ -106,23 +116,19 @@ export default function Train() {
   return (
     <div className="bg-white text-black">
       <div className="relative bg-black text-white">
-        <div className="flex justify-between">
+        <div className="flex justify-around">
           <a href="./gallery">Gallery</a>
         </div>
       </div>
-      <div className="relative">
-        <ArtLabel art={trainArt} />
+      <div className="relative flex flex-col items-center">
         <div style={imgStyle} className="">
           <img ref={artEl} src={`./${trainArt.src}`} />
         </div>
+        <ArtLabel art={trainArt}/>
       </div>
 
-      <div className="relative flex">
+      <div className="relative flex justify-center">
         <div className="mb-3 xl:w-96">
-          <label htmlFor="exampleFormControlInput1"
-            className="text-sm form-label inline-block mb-2 text-gray-700">
-            Copy name of artwork
-          </label>
           <input
             ref={artNameRef}
             autoComplete="off"
