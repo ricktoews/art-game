@@ -15,13 +15,18 @@ function toggleArt(ArtSelections, identifier) {
 
   if (item.selected) {
     delete item.selected;
-  } else {
+    return false;
+  }
+
+  else {
     item.selected = true;
+    return true;
   }
 }
 
 export default function Gallery() {
   const [itemToggled, setItemToggled] = useState("");
+  const [itemToggleState, setItemToggleState] = useState(null);
   const [ArtSelections, setArtSelections] = useState(Art);
   const router = useRouter();
 
@@ -33,8 +38,9 @@ export default function Gallery() {
   const handleItemClick = (e) => {
     const el = e.currentTarget;
     const { identifier } = el.dataset;
-    toggleArt(ArtSelections, identifier);
-    console.log("====> handleItemClick", identifier);
+    const setting = toggleArt(ArtSelections, identifier);
+    console.log("====> handleItemClick", identifier), setting;
+    setItemToggleState(setting);
     setItemToggled(identifier);
     saveArtSelections(ArtSelections);
   };
@@ -49,7 +55,7 @@ export default function Gallery() {
   };
 
   if (!ArtSelections) return null;
-console.log('====> ArtSelections', ArtSelections);
+
   return (
     <div className="bg-white text-black">
       <div className="relative bg-black text-white">

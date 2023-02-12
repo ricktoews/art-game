@@ -49,7 +49,7 @@ export default function Gallery() {
   };
 
   if (!ArtSelections) return null;
-console.log('====> ArtSelections', ArtSelections);
+
   return (
     <div className="bg-white text-black">
       <div className="relative bg-black text-white">
@@ -61,6 +61,7 @@ console.log('====> ArtSelections', ArtSelections);
 
       <div className="flex justify-center flex-wrap">
         {ArtSelections.map((item, key) => {
+          console.log('====> item', itemkey);
           return (
             <GalleryItem
               handleItemClick={handleItemClick}
