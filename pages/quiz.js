@@ -13,24 +13,13 @@ function isAnswerCorrect(actual, expected) {
   return result;
 }
 
-function ArtLabel(props) {
-  const { art } = props;
-  return (
-    <div className="text-sm">
-      <div>{art.name}</div>
-      <div>{art.artist}</div>
-      <div>{art.date}</div>
-    </div>
-  );
-}
-
 function selectArtForTraining(ArtSelections, ndx) {
   const randomArt = ArtSelections[ndx];
   console.log('====> Random art', randomArt, ndx);
   return randomArt;
 }
 
-export default function Train() {
+export default function Quiz() {
   const [ArtSelections, setArtSelections] = useState([]);
   const [trainingNdx, setTrainingNdx] = useState();
   const [trainArt, setTrainArt] = useState(null);
@@ -124,8 +113,6 @@ export default function Train() {
         <div style={imgStyle} className="">
           <img ref={artEl} src={`./${trainArt.src}`} />
         </div>
-        <ArtLabel art={trainArt}/>
-
         <div className="mb-3 xl:w-96">
           <input
             ref={artNameRef}
