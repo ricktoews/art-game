@@ -39,6 +39,8 @@ export default function Train() {
   const artNameRef = useRef(null);
   const artArtistRef = useRef(null);
   const artDateRef = useRef(null);
+  const menuOptionsRef = useRef(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -109,18 +111,37 @@ export default function Train() {
     }
   };
 
+  const handleMenuClick = (e) => {
+    if (menuOptionsRef.current) {
+      let currentState = menuOptionsRef.current.style.display !== 'block' ? 0 : 1;
+      if (currentState) {
+        menuOptionsRef.current.style.display = 'none';
+      } else {
+        menuOptionsRef.current.style.display = 'block';
+      }
+    }
+  };
+
   if (!trainArt) return null;
 
 
-  
   return (
     <div className="bg-white text-black">
-      <div className="relative bg-black text-white">
-        <div className="flex justify-around">
-          <a href="./">Gallery</a>
+      <div onClick={handleMenuClick} className="fixed cursor-pointer p-1.5 z-10 flex flex-col justify-center items-center rounded-full top-1 left-1 w-9 h-9 bg-white">
+        <svg viewBox="0 0 100 80" width="30" height="30">
+          <rect width="100" height="15" rx="10"></rect>
+          <rect y="30" width="80" height="15" rx="10"></rect>
+          <rect y="60" width="100" height="15" rx="10"></rect>
+        </svg>
+      </div>
+
+      <div ref={menuOptionsRef} className="fixed hidden left-2 top-10 bg-white text-black">
+        <div className="flex flex-col justify-around">
+          <div><a href="./">Gallery</a></div>
         </div>
       </div>
-      <div className="relative flex flex-col items-center">
+
+      <div style={{marginLeft: '50px'}} className="relative flex flex-col items-center">
         <div style={imgStyle} className="">
           <img ref={artEl} src={`./${trainArt.src}`} />
         </div>

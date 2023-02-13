@@ -8,7 +8,7 @@ export function GalleryItem(props) {
   };
   const identifier = item.name;
   const selectedItem = item.selected ? "bg-orange-100" : "bg-white";
-  const itemClass = `flex flex-col justify-center items-center p-4 ${selectedItem} cursor-pointer`;
+  const itemClass = `flex flex-col justify-center items-center p-2 ${selectedItem} cursor-pointer`;
 
   return (
     <div

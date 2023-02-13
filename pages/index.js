@@ -49,7 +49,7 @@ export default function Gallery() {
   const handleMenuClick = (e) => {
     if (menuOptionsRef.current) {
       console.log('====> menu options state', menuOptionsRef.current.style.display)
-      let currentState = menuOptionsRef.current.style.display === 'none' ? 0 : 1;
+      let currentState = menuOptionsRef.current.style.display !== 'block' ? 0 : 1;
       if (currentState) {
         menuOptionsRef.current.style.display = 'none';
       } else {
