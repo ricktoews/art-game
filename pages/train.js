@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { MAX_HEIGHT, MAX_WIDTH, makeProportionate, saveArtSelections, getArtSelections } from "../utils/helpers";
-import { Artifika } from "@next/font/google";
-
+import NavMenu from "@/components/NavMenu";
 
 function isAnswerCorrect(actual, expected) {
-  console.log('====> isAnswerCorrect', actual, expected);
   let result = false;
   if (actual && expected) {
     result = actual.toLowerCase() === expected.toLowerCase();
@@ -26,7 +24,6 @@ function ArtLabel(props) {
 
 function selectArtForTraining(ArtSelections, ndx) {
   const randomArt = ArtSelections[ndx];
-  console.log('====> Random art', randomArt, ndx);
   return randomArt;
 }
 
@@ -39,7 +36,6 @@ export default function Train() {
   const artNameRef = useRef(null);
   const artArtistRef = useRef(null);
   const artDateRef = useRef(null);
-  const menuOptionsRef = useRef(null);
 
   const router = useRouter();
 
@@ -111,37 +107,14 @@ export default function Train() {
     }
   };
 
-  const handleMenuClick = (e) => {
-    if (menuOptionsRef.current) {
-      let currentState = menuOptionsRef.current.style.display !== 'block' ? 0 : 1;
-      if (currentState) {
-        menuOptionsRef.current.style.display = 'none';
-      } else {
-        menuOptionsRef.current.style.display = 'block';
-      }
-    }
-  };
-
   if (!trainArt) return null;
 
 
   return (
     <div className="bg-white text-black">
-      <div onClick={handleMenuClick} className="fixed cursor-pointer p-1.5 z-10 flex flex-col justify-center items-center rounded-full top-1 left-1 w-9 h-9 bg-white">
-        <svg viewBox="0 0 100 80" width="30" height="30">
-          <rect width="100" height="15" rx="10"></rect>
-          <rect y="30" width="80" height="15" rx="10"></rect>
-          <rect y="60" width="100" height="15" rx="10"></rect>
-        </svg>
-      </div>
 
-      <div ref={menuOptionsRef} className="fixed hidden left-2 top-10 bg-white text-black">
-        <div className="flex flex-col justify-around">
-          <div><a href="./">Gallery</a></div>
-        </div>
-      </div>
-
-      <div style={{marginLeft: '50px'}} className="relative flex flex-col items-center">
+      <NavMenu/>
+      <div className="relative ml-[50px] flex flex-col items-center">
         <div style={imgStyle} className="">
           <img ref={artEl} src={`./${trainArt.src}`} />
         </div>
