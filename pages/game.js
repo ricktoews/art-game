@@ -1,27 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import NavMenu from "@/components/NavMenu";
-import { getArtSelections, fieldClasses } from "@/utils/helpers";
-
-const MAX_WIDTH = 400;
-const MAX_HEIGHT = 400;
+import {
+  MAX_WIDTH,
+  MAX_HEIGHT,
+  getArtSelections,
+  fieldClasses,
+} from "@/utils/helpers";
 
 const FRAME_WIDTH = 100;
 const FRAME_HEIGHT = 100;
 
-/*
-const artworks = [
-    { name: 'girl-with-a-pearl-earring.jpeg', mode: 'portrait' },
-    { name: 'a-sunday-afternoon-on-the-island-of-la-grande-jatte.jpeg', mode: 'landscape' },
-    { name: 'arrangement-in-grey-and-black-no-1.jpeg', mode: 'landscape' },
-    { name: 'les-demoiselles-d-avignon.jpeg', mode: 'landscape' },
-    { name: 'mona-lisa.jpeg', mode: 'portrait' },
-    { name: 'starry-night.jpeg', mode: 'landscape' },
-    { name: 'the-arnolfini-portrait.jpeg', mode: 'portrait' },
-    { name: 'the-birth-of-venus.jpeg', mode: 'landscape' },
-    { name: 'the-garden-of-earthly-delights.jpeg', mode: 'portrait' },
-    { name: 'the-kiss.jpeg', mode: 'portrait' }
-];
-*/
 const artworks = [];
 
 // Helper function
@@ -33,6 +21,7 @@ export default function Game() {
   const [ArtSelections, setArtSelections] = useState([]);
   const baseImgStyle = { position: "relative" };
   const artEl = useRef();
+  const artFrameRef = useRef(null);
   const [artworkNdx, setArtworkNdx] = useState(-1);
   const [artSpecs, setArtSpecs] = useState({ height: 0, left: 0 });
   const [imgStyle, setImgStyle] = useState({
@@ -78,7 +67,7 @@ export default function Game() {
         Should be called once the specs change--specifically, the image height.
     */
   useEffect(() => {
-    handler();
+    handleReposition();
   }, [artSpecs.height]);
 
   // Handler for image load.
@@ -98,6 +87,7 @@ export default function Game() {
       }
       setImgStyle({
         position: "relative",
+        boxShadow: "gray 3px 2px 5px",
         maxHeight: `${adjustedHeight}px`,
         maxWidth: `${adjustedWidth}px`,
       });
@@ -118,7 +108,17 @@ export default function Game() {
     setImgStyle({ ...imgStyle, left: `${x}px`, top: `${y}px` });
   }
 
-  function handler() {
+  function handleInput(e) {
+    const el = e.target;
+    const val = el.value;
+    if (val.toLowerCase() == artworks[artworkNdx].name.toLowerCase()) {
+      artEl.current.style.top = "";
+      artEl.current.style.left = "";
+      artFrameRef.current.style = {};
+    }
+  }
+
+  function handleReposition() {
     const { y, x } = getRandomPosition(artSpecs);
     updateImgPosition(y, x);
   }
@@ -134,28 +134,37 @@ export default function Game() {
             <div>
               <div
                 style={{
-                  overflow: "hidden",
-                  maxHeight: `${artFrame.height}px`,
-                  maxWidth: `${artFrame.width}px`,
+                  ...artSpecs,
+                  boxShadow: "gray 3px 2px 5px",
                 }}
+                className="mb-5"
               >
-                <img
-                  ref={artEl}
-                  src={`./${artworks[artworkNdx].src}`}
-                  style={imgStyle}
-                />
+                <div
+                  ref={artFrameRef}
+                  style={{
+                    overflow: "hidden",
+                    maxHeight: `${artFrame.height}px`,
+                    maxWidth: `${artFrame.width}px`,
+                  }}
+                >
+                  <img
+                    ref={artEl}
+                    src={`./${artworks[artworkNdx].src}`}
+                    style={imgStyle}
+                  />
+                </div>
               </div>
-
               <div>
                 <input
                   type="text"
+                  onInput={handleInput}
                   style={{ borderBottom: "1px solid gray" }}
                   className={fieldClasses}
                   placeholder="Name of artwork"
                 />
               </div>
 
-              <button onClick={handler}>Reposition</button>
+              <button onClick={handleReposition}>Reposition</button>
             </div>
           )}
         </div>
