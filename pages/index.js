@@ -17,9 +17,7 @@ function toggleArt(ArtSelections, identifier) {
   if (item.selected) {
     delete item.selected;
     return false;
-  }
-
-  else {
+  } else {
     item.selected = true;
     return true;
   }
@@ -50,20 +48,21 @@ export default function Gallery() {
 
   return (
     <div className="relative bg-white text-black">
-
-      <NavMenu/>
-
-      <div className="flex ml-[50px] justify-center flex-wrap">
-        {ArtSelections.map((item, key) => {
-          return (
-            <GalleryItem
-              handleItemClick={handleItemClick}
-              item={item}
-              key={key}
-              itemkey={key}
-            ></GalleryItem>
-          );
-        })}
+      <NavMenu />
+      <div className="ml-[50px] flex flex-col items-center">
+        <div className="text-[24pt] mb-5">Art Gallery</div>
+        <div className="flex justify-center flex-wrap">
+          {ArtSelections.map((item, key) => {
+            return (
+              <GalleryItem
+                handleItemClick={handleItemClick}
+                item={item}
+                key={key}
+                itemkey={key}
+              ></GalleryItem>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

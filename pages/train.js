@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { MAX_HEIGHT, MAX_WIDTH, makeProportionate, saveArtSelections, getArtSelections } from "../utils/helpers";
+import {
+  MAX_HEIGHT,
+  MAX_WIDTH,
+  makeProportionate,
+  saveArtSelections,
+  getArtSelections,
+  fieldClasses,
+} from "../utils/helpers";
 import NavMenu from "@/components/NavMenu";
 
 function isAnswerCorrect(actual, expected) {
@@ -41,36 +48,41 @@ export default function Train() {
 
   useEffect(() => {
     let items = getArtSelections();
-    items = items.filter(item => item.selected);
+    items = items.filter((item) => item.selected);
     setArtSelections(items);
     setTrainingNdx(0);
   }, []);
 
   useEffect(() => {
     if (artEl.current) {
-      artEl.current.onload = e => {
-        console.log('====> artEl.current (onload)', artEl.current.width);
+      artEl.current.onload = (e) => {
+        console.log("====> artEl.current (onload)", artEl.current.width);
         const { width, height } = artEl.current;
         let adjustedHeight, adjustedWidth;
         if (width > height) {
-            adjustedWidth = MAX_WIDTH;
-            adjustedHeight = makeProportionate(adjustedWidth, width, height);
+          adjustedWidth = MAX_WIDTH;
+          adjustedHeight = makeProportionate(adjustedWidth, width, height);
         } else {
-            adjustedHeight = MAX_HEIGHT;
-            adjustedWidth = makeProportionate(adjustedHeight, height, width);
+          adjustedHeight = MAX_HEIGHT;
+          adjustedWidth = makeProportionate(adjustedHeight, height, width);
         }
-        setImgStyle({ position: 'relative', maxHeight: `${adjustedHeight}px`, maxWidth: `${adjustedWidth}px`});
-  }
+        setImgStyle({
+          position: "relative",
+          boxShadow: "gray 3px 2px 5px",
+          maxHeight: `${adjustedHeight}px`,
+          maxWidth: `${adjustedWidth}px`,
+        });
+      };
     }
   }, [trainArt]);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (ArtSelections.length > 0) {
       const randomArt = selectArtForTraining(ArtSelections, trainingNdx);
       if (artNameRef.current) {
-        artNameRef.current.value = '';
-        artArtistRef.current.value = '';
-        artDateRef.current.value = '';
+        artNameRef.current.value = "";
+        artArtistRef.current.value = "";
+        artDateRef.current.value = "";
         artNameRef.current.focus();
       }
       setTrainArt(randomArt);
@@ -81,7 +93,7 @@ export default function Train() {
     router.push("./gallery");
   };
 
-  const fieldsToCheck = ['name', 'artist', 'date'];
+  const fieldsToCheck = ["name", "artist", "date"];
   const answers = {};
   const handleCheckField = (e) => {
     e.preventDefault();
@@ -90,7 +102,7 @@ export default function Train() {
     const field = el.dataset.fieldname;
     answers[field] = entry;
     let count = 0;
-    fieldsToCheck.forEach(item => {
+    fieldsToCheck.forEach((item) => {
       // Is field correct?
       if (isAnswerCorrect(answers[item], trainArt[item])) {
         count++;
@@ -109,48 +121,50 @@ export default function Train() {
 
   if (!trainArt) return null;
 
-
   return (
     <div className="bg-white text-black">
+      <NavMenu />
+      <div className="ml-[50px] flex flex-col items-center">
+        <div className="text-[24pt] mb-5">Train</div>
 
-      <NavMenu/>
-      <div className="relative ml-[50px] flex flex-col items-center">
-        <div style={imgStyle} className="">
-          <img ref={artEl} src={`./${trainArt.src}`} />
-        </div>
-        <ArtLabel art={trainArt}/>
+        <div className="flex flex-col items-center">
+          <div style={imgStyle} className="m-3 p-2">
+            <img ref={artEl} src={`./${trainArt.src}`} />
+          </div>
+          <ArtLabel art={trainArt} />
 
-        <div className="mb-3 xl:w-96">
-          <input
-            ref={artNameRef}
-            autoComplete="off"
-            type="text"
-            data-fieldname="name"
-            onInput={handleCheckField}
-            className="form-control block px-2 py-1 bg-white 
-        focus:text-gray-700 focus:bg-white focus:outline-none"
-            placeholder="Name of artwork"
-          />
-          <input
-            ref={artArtistRef}
-            autoComplete="off"
-            type="text"
-            data-fieldname="artist"
-            onInput={handleCheckField}
-            className="form-control block px-2 py-1 bg-white 
-        focus:text-gray-700 focus:bg-white focus:outline-none"
-            placeholder="Artist"
-          />
-          <input
-            ref={artDateRef}
-            autoComplete="off"
-            type="text"
-            data-fieldname="date"
-            onInput={handleCheckField}
-            className="form-control block px-2 py-1 bg-white 
-        focus:text-gray-700 focus:bg-white focus:outline-none"
-            placeholder="Date"
-          />
+          <div className="mb-3 xl:w-96">
+            <input
+              ref={artNameRef}
+              autoComplete="off"
+              type="text"
+              data-fieldname="name"
+              onInput={handleCheckField}
+              style={{ borderBottom: "1px solid gray" }}
+              className={fieldClasses}
+              placeholder="Name of artwork"
+            />
+            <input
+              ref={artArtistRef}
+              autoComplete="off"
+              type="text"
+              data-fieldname="artist"
+              onInput={handleCheckField}
+              style={{ borderBottom: "1px solid gray" }}
+              className={fieldClasses}
+              placeholder="Artist"
+            />
+            <input
+              ref={artDateRef}
+              autoComplete="off"
+              type="text"
+              data-fieldname="date"
+              onInput={handleCheckField}
+              style={{ borderBottom: "1px solid gray" }}
+              className={fieldClasses}
+              placeholder="Date"
+            />
+          </div>
         </div>
       </div>
     </div>
