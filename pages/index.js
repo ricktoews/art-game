@@ -38,7 +38,7 @@ export default function Gallery() {
     const el = e.currentTarget;
     const { identifier } = el.dataset;
     const setting = toggleArt(ArtSelections, identifier);
-    console.log("====> handleItemClick", identifier), setting;
+    console.log("====> handleItemClick", el, identifier, setting);
     setItemToggleState(setting);
     setItemToggled(identifier);
     saveArtSelections(ArtSelections);

@@ -20,41 +20,50 @@ export function saveArtSelections(ArtSelections) {
 
 function updateArt(savedArt, loadedArt) {
   const artToAdd = [];
-  const artToDelete = [];
-  loadedArt.forEach(item => {
+
+  // Update saved art; note new art pieces to be added.
+  loadedArt.forEach((item) => {
     let src = item.src;
-    if (!savedArt.find(savedItem => savedItem.src === src)) {
+    let currentArt = savedArt.find((savedItem) => savedItem.src === src);
+    if (!currentArt) {
       artToAdd.push(item);
+    } else {
+      currentArt.name = item.name;
+      currentArt.artist = item.artist;
+      currentArt.date = item.date;
     }
   });
-  savedArt.forEach(item => {
+
+  // Delete art no longer in collection.
+  savedArt.forEach((item) => {
     let src = item.src;
-    if (!loadedArt.find(loadedItem => loadedItem.src === src)) {
+    if (!loadedArt.find((loadedItem) => loadedItem.src === src)) {
       item.delete = true;
     }
   });
+  savedArt = savedArt.filter((item) => !item.delete);
+
+  // Add new art pieces previously noted.
   if (artToAdd.length > 0) {
-    savedArt = savedArt.concat(artToAdd); 
+    savedArt = savedArt.concat(artToAdd);
   }
-  savedArt = savedArt.filter(item => !item.delete);
+
   saveArtSelections(savedArt);
-  console.log('====> updated savedArt', savedArt);
+
   return savedArt;
 }
 
-
 export function getArtSelections() {
-console.log('====> getArtSelections', Art.map(item => item.src));
-  let artSelections = window.localStorage.getItem("art-game") || Art;
-
+  let selections = window.localStorage.getItem("art-game") || "";
+  let updatedArt = [];
   try {
-    artSelections = JSON.parse(artSelections);
-    artSelections = updateArt(artSelections, Art);
+    selections = JSON.parse(selections);
+    updatedArt = updateArt(selections, Art);
   } catch (e) {
-    console.log("Error JSON.parse art selection", artSelections);
+    console.log("Error JSON.parse art selection", updatedArt);
   }
-  console.log('====> returning artSelections', artSelections);
-  return artSelections;
+
+  return updatedArt;
 }
 
 export function handleImgLoad(src) {
