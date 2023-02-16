@@ -9,6 +9,7 @@ import {
   fieldClasses,
 } from "../utils/helpers";
 import NavMenu from "@/components/NavMenu";
+const CORRECT_COLOR = "green";
 
 function isAnswerCorrect(actual, expected) {
   let result = false;
@@ -56,7 +57,6 @@ export default function Train() {
   useEffect(() => {
     if (artEl.current) {
       artEl.current.onload = (e) => {
-        console.log("====> artEl.current (onload)", artEl.current.width);
         const { width, height } = artEl.current;
         let adjustedHeight, adjustedWidth;
         if (width > height) {
@@ -73,6 +73,12 @@ export default function Train() {
           maxWidth: `${adjustedWidth}px`,
         });
       };
+      artNameRef.current.style.color = "inherit";
+      artNameRef.current.disabled = false;
+      artArtistRef.current.style.color = "inherit";
+      artArtistRef.current.disabled = false;
+      artDateRef.current.style.color = "inherit";
+      artDateRef.current.disabled = false;
     }
   }, [trainArt]);
 
@@ -94,6 +100,7 @@ export default function Train() {
   };
 
   const fieldsToCheck = ["name", "artist", "date"];
+  const correct = {};
   const answers = {};
   const handleCheckField = (e) => {
     e.preventDefault();
@@ -105,7 +112,20 @@ export default function Train() {
     fieldsToCheck.forEach((item) => {
       // Is field correct?
       if (isAnswerCorrect(answers[item], trainArt[item])) {
+        correct[item] = true;
         count++;
+        if (item === "name") {
+          artNameRef.current.style.color = CORRECT_COLOR;
+          artNameRef.current.disabled = true;
+        }
+        if (item === "artist") {
+          artArtistRef.current.style.color = CORRECT_COLOR;
+          artArtistRef.current.disabled = true;
+        }
+        if (item === "date") {
+          artDateRef.current.style.color = CORRECT_COLOR;
+          artDateRef.current.disabled = true;
+        }
       }
     });
 
