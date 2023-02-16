@@ -11,10 +11,16 @@ import {
 import NavMenu from "@/components/NavMenu";
 const CORRECT_COLOR = "green";
 
+function fixString(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+}
 function isAnswerCorrect(actual, expected) {
   let result = false;
   if (actual && expected) {
-    result = actual.toLowerCase() === expected.toLowerCase();
+    result = fixString(actual) === fixString(expected);
   }
   return result;
 }
