@@ -7,6 +7,7 @@ import {
   saveArtSelections,
   getArtSelections,
   fieldClasses,
+  fieldStyle,
 } from "../utils/helpers";
 import NavMenu from "@/components/NavMenu";
 const CORRECT_COLOR = "green";
@@ -159,14 +160,14 @@ export default function Train() {
           </div>
           <ArtLabel art={trainArt} />
 
-          <div className="mb-3 xl:w-96">
+          <div className="mt-8 mb-3 xl:w-96">
             <input
               ref={artNameRef}
               autoComplete="off"
               type="text"
               data-fieldname="name"
               onInput={handleCheckField}
-              style={{ borderBottom: "1px solid gray" }}
+              style={fieldStyle}
               className={fieldClasses}
               placeholder="Name of artwork"
             />
@@ -176,7 +177,7 @@ export default function Train() {
               type="text"
               data-fieldname="artist"
               onInput={handleCheckField}
-              style={{ borderBottom: "1px solid gray" }}
+              style={fieldStyle}
               className={fieldClasses}
               placeholder="Artist"
             />
@@ -186,7 +187,7 @@ export default function Train() {
               type="text"
               data-fieldname="date"
               onInput={handleCheckField}
-              style={{ borderBottom: "1px solid gray" }}
+              style={fieldStyle}
               className={fieldClasses}
               placeholder="Date"
             />

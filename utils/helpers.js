@@ -8,6 +8,7 @@ export const MAX_HEIGHT = 250;
 
 export const fieldClasses =
   "w-full form-control block px-2 py-1 bg-white focus:text-gray-700 focus:bg-white focus:outline-none";
+export const fieldStyle = { fontSize: "18pt", borderBottom: "1px solid gray", marginBottom: "16px" };
 
 // Helper function
 export const makeProportionate = (newX, x, y) => {
@@ -58,10 +59,11 @@ export function getArtSelections() {
   let updatedArt = [];
   try {
     selections = JSON.parse(selections);
-    updatedArt = updateArt(selections, Art);
   } catch (e) {
     console.log("Error JSON.parse art selection", updatedArt);
+    selections = [];
   }
+  updatedArt = updateArt(selections, Art);
 
   return updatedArt;
 }
