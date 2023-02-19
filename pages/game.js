@@ -5,6 +5,7 @@ import {
   MAX_HEIGHT,
   getArtSelections,
   fieldClasses,
+  fieldStyle,
 } from "@/utils/helpers";
 
 const FRAME_WIDTH = 100;
@@ -45,6 +46,7 @@ export default function Game() {
  */
   useEffect(() => {
     let items = getArtSelections();
+    items = items.filter((item) => item.selected);
     items.forEach((item) => {
       artworks.push(item);
     });
@@ -123,6 +125,8 @@ export default function Game() {
     updateImgPosition(y, x);
   }
 
+  if (artworkNdx === -1) return null;
+
   return (
     <div className="bg-white text-black">
       <NavMenu />
@@ -158,13 +162,13 @@ export default function Game() {
                 <input
                   type="text"
                   onInput={handleInput}
-                  style={{ borderBottom: "1px solid gray" }}
+                  style={fieldStyle}
                   className={fieldClasses}
                   placeholder="Name of artwork"
                 />
               </div>
 
-              <button onClick={handleReposition}>Reposition</button>
+              <button className="bg-slate-200 p-2" onClick={handleReposition}>Reposition</button>
             </div>
           )}
         </div>
