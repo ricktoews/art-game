@@ -25,7 +25,7 @@ export default function Game() {
   const artEl = useRef();
   const artFrameRef = useRef(null);
   const [artworkNdx, setArtworkNdx] = useState(-1);
-  const [artSpecs, setArtSpecs] = useState({ height: 0, left: 0 });
+  const [artSpecs, setArtSpecs] = useState({ height: 0, left: 0});
   const [imgStyle, setImgStyle] = useState({
     position: "relative",
     maxHeight: 0,
@@ -94,7 +94,7 @@ export default function Game() {
         maxHeight: `${adjustedHeight}px`,
         maxWidth: `${adjustedWidth}px`,
       });
-      setArtSpecs({ height: adjustedHeight, width: adjustedWidth });
+      setArtSpecs({ height: adjustedHeight, width: adjustedWidth, margin: '20px auto' });
     };
   };
 
