@@ -1,14 +1,25 @@
 import Art from "@/data/art";
-
-export const FRAME_WIDTH = 100;
-export const FRAME_HEIGHT = 100;
-
-export const MAX_WIDTH = 250;
-export const MAX_HEIGHT = 250;
+import { MAX_WIDTH, MAX_HEIGHT } from './constants';
 
 export const fieldClasses =
   "w-full form-control block px-2 py-1 bg-white focus:text-gray-700 focus:bg-white focus:outline-none";
-export const fieldStyle = { fontSize: "18pt", borderBottom: "1px solid gray", marginBottom: "16px" };
+export const fieldStyle = { fontSize: "18pt", borderBottom: "1px solid gray", marginBottom: "16px", outline: "none" };
+
+export function fixString(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+}
+
+export function isAnswerCorrect(actual, expected) {
+  let result = false;
+  if (actual && expected) {
+    result = fixString(actual) === fixString(expected);
+  }
+  return result;
+}
+
 
 // Helper function
 export const makeProportionate = (newX, x, y) => {

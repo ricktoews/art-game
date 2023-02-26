@@ -2,29 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import {
   MAX_HEIGHT,
-  MAX_WIDTH,
+  MAX_WIDTH
+} from '@/utils/constants';
+import {
   makeProportionate,
   saveArtSelections,
   getArtSelections,
   fieldClasses,
   fieldStyle,
-} from "../utils/helpers";
+} from "@/utils/helpers";
 import Layout from "@/components/Layout";
-const CORRECT_COLOR = "green";
-
-function fixString(str) {
-  return str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "");
-}
-function isAnswerCorrect(actual, expected) {
-  let result = false;
-  if (actual && expected) {
-    result = fixString(actual) === fixString(expected);
-  }
-  return result;
-}
+import ArtInput from "@/components/ArtInput";
 
 function ArtLabel(props) {
   const { art } = props;
@@ -49,8 +37,6 @@ export default function Train() {
   const [imgStyle, setImgStyle] = useState({});
   const artEl = useRef(null);
   const artNameRef = useRef(null);
-  const artArtistRef = useRef(null);
-  const artDateRef = useRef(null);
 
   const router = useRouter();
 
@@ -82,12 +68,6 @@ export default function Train() {
       };
       artNameRef.current.style.color = "inherit";
       artNameRef.current.disabled = false;
-/*
-      artArtistRef.current.style.color = "inherit";
-      artArtistRef.current.disabled = false;
-      artDateRef.current.style.color = "inherit";
-      artDateRef.current.disabled = false;
-*/
     }
   }, [trainArt]);
 
@@ -96,10 +76,6 @@ export default function Train() {
       const randomArt = selectArtForTraining(ArtSelections, trainingNdx);
       if (artNameRef.current) {
         artNameRef.current.value = "";
-        /*
-        artArtistRef.current.value = "";
-        artDateRef.current.value = "";
-        */
         artNameRef.current.focus();
       }
       setTrainArt(randomArt);
@@ -110,92 +86,25 @@ export default function Train() {
     router.push("./gallery");
   };
 
-  const fieldsToCheck = ["name"/*, "artist", "date"*/];
-  const correct = {};
-  const answers = {};
-  const handleCheckField = (e) => {
-    e.preventDefault();
-    const el = e.target;
-    const entry = el.value;
-    const field = el.dataset.fieldname;
-    answers[field] = entry;
-    let count = 0;
-    fieldsToCheck.forEach((item) => {
-      // Is field correct?
-      if (isAnswerCorrect(answers[item], trainArt[item])) {
-        correct[item] = true;
-        count++;
-        if (item === "name") {
-          artNameRef.current.style.color = CORRECT_COLOR;
-          artNameRef.current.disabled = true;
-        }
-        /*
-        if (item === "artist") {
-          artArtistRef.current.style.color = CORRECT_COLOR;
-          artArtistRef.current.disabled = true;
-        }
-        if (item === "date") {
-          artDateRef.current.style.color = CORRECT_COLOR;
-          artDateRef.current.disabled = true;
-        }
-        */
-      }
-    });
-
-    // If all fields have been entered, check them.
-    if (count === fieldsToCheck.length) {
-      let ndx = trainingNdx + 1;
-      if (ndx >= ArtSelections.length) {
-        ndx = 0;
-      }
-      setTrainingNdx(ndx);
+  const handleCorrect = (e) => {
+    let ndx = trainingNdx + 1;
+    if (ndx >= ArtSelections.length) {
+      ndx = 0;
     }
-  };
+    setTrainingNdx(ndx);
+  }
 
   if (!trainArt) return null;
 
   return (
     <Layout title="Train">
       <div className="flex flex-col items-center">
-      <div className="mt-8 mb-3 xl:w-96">
-          <input
-            ref={artNameRef}
-            autoComplete="off"
-            type="text"
-            data-fieldname="name"
-            onInput={handleCheckField}
-            style={fieldStyle}
-            className={fieldClasses}
-            placeholder="Name of artwork"
-          />
-{/*
-          <input
-            ref={artArtistRef}
-            autoComplete="off"
-            type="text"
-            data-fieldname="artist"
-            onInput={handleCheckField}
-            style={fieldStyle}
-            className={fieldClasses}
-            placeholder="Artist"
-          />
-          <input
-            ref={artDateRef}
-            autoComplete="off"
-            type="text"
-            data-fieldname="date"
-            onInput={handleCheckField}
-            style={fieldStyle}
-            className={fieldClasses}
-            placeholder="Date"
-          />
-  */}
-        </div>
+        <ArtInput placeholder="Name of artwork" artNameRef={artNameRef} handleCorrect={handleCorrect} art={trainArt} />
 
         <div style={imgStyle} className="m-3 p-2">
           <img ref={artEl} src={`./${trainArt.src}`} />
         </div>
-        <ArtLabel art={trainArt} />
+        <ArtLabel art={trainArt} artNameRef={artNameRef} />
 
       </div>
 

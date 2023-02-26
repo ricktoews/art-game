@@ -5,10 +5,6 @@ export default function NavMenu(props) {
 
   const handleMenuClick = (e) => {
     if (menuOptionsRef.current) {
-      console.log(
-        "====> menu options state",
-        menuOptionsRef.current.style.display
-      );
       let currentState =
         menuOptionsRef.current.style.display !== "block" ? 0 : 1;
       if (currentState) {

@@ -1,32 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import Masthead from "@/components/Masthead";
-import Layout from "@/components/Layout";
 import {
   MAX_WIDTH,
   MAX_HEIGHT,
+} from "@/utils/constants";
+import {
+  isAnswerCorrect,
   getArtSelections,
-  fieldClasses,
-  fieldStyle,
 } from "@/utils/helpers";
+import Layout from "@/components/Layout";
+import ArtInput from "@/components/ArtInput";
 
 const FRAME_WIDTH = 100;
 const FRAME_HEIGHT = 100;
 
 const artworks = [];
 
-function fixString(str) {
-  return str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "");
-}
-function isAnswerCorrect(actual, expected) {
-  let result = false;
-  if (actual && expected) {
-    result = fixString(actual) === fixString(expected);
-  }
-  return result;
-}
 
 // Helper function
 const makeProportionate = (newX, x, y) => {
@@ -165,20 +153,21 @@ export default function Game() {
     updateImgPosition(y, x);
   }
 
+  const handleCorrect = () => {
+    artFrameRef.current.style.maxHeight = '100%';
+    artFrameRef.current.style.maxWidth = '100%';
+    artEl.current.style.transition = 'top 1s linear, left 1s linear';
+    artEl.current.style.top = 0;
+    artEl.current.style.left = 0;
+    setCorrect(true);
+
+  }
+
   if (artworkNdx === -1) return null;
 
   return (
     <Layout title="Game">
-      <div>
-        <input
-          ref={artNameInputRef}
-          type="text"
-          onInput={handleInput}
-          style={fieldStyle}
-          className={fieldClasses}
-          placeholder="Name of artwork"
-        />
-      </div>
+      <ArtInput placeholder="Identify the painting" artNameRef={artNameInputRef} handleCorrect={handleCorrect} art={artworks[artworkNdx]} />
 
       <div className="flex flex-col items-center">
         {artworkNdx > -1 && artworks[artworkNdx] && (
