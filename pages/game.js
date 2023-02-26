@@ -24,8 +24,10 @@ export default function Game() {
   const baseImgStyle = { position: "relative" };
   const artEl = useRef();
   const artFrameRef = useRef(null);
+  const artNameInputRef = useRef(null);
   const [artworkNdx, setArtworkNdx] = useState(-1);
   const [artSpecs, setArtSpecs] = useState({ height: 0, left: 0 });
+  const [correct, setCorrect] = useState(false);
   const [imgStyle, setImgStyle] = useState({
     position: "relative",
     maxHeight: 0,
@@ -55,6 +57,25 @@ export default function Game() {
     items = items.filter((item) => item.selected);
     setArtSelections(items);
   }, []);
+
+  function getRandomArtwork() {
+    let items = getArtSelections();
+    items = items.filter((item) => item.selected);
+    items.forEach((item) => {
+      artworks.push(item);
+    });
+    setArtworkNdx(Math.floor(Math.random() * items.length));
+    items = items.filter((item) => item.selected);
+    setArtSelections(items);
+    handleReposition();
+    setCorrect(false);
+    artFrameRef.current.style.overflow = 'hidden';
+    artFrameRef.current.style.maxHeight = `${FRAME_HEIGHT}px`;
+    artFrameRef.current.style.maxWidth = `${FRAME_WIDTH}px`;
+    artEl.current.style.transition = '';
+
+    artNameInputRef.current.value = '';
+  }
 
   /*
         Once image has been selected.
@@ -121,6 +142,7 @@ export default function Game() {
       artEl.current.style.transition = 'top 1s linear, left 1s linear';
       artEl.current.style.top = 0;
       artEl.current.style.left = 0;
+      setCorrect(true);
     }
   }
 
@@ -135,6 +157,7 @@ export default function Game() {
     <Layout title="Game">
       <div>
         <input
+          ref={artNameInputRef}
           type="text"
           onInput={handleInput}
           style={fieldStyle}
@@ -170,6 +193,7 @@ export default function Game() {
             </div>
 
             <button className="bg-slate-200 p-2" onClick={handleReposition}>Reposition</button>
+            {correct && <button className="bg-slate-200 p-2" onClick={getRandomArtwork}>Another?</button>}
           </div>
         )}
       </div>
