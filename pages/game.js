@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import NavMenu from "@/components/NavMenu";
+import Masthead from "@/components/Masthead";
+import Layout from "@/components/Layout";
 import {
   MAX_WIDTH,
   MAX_HEIGHT,
@@ -128,51 +129,48 @@ export default function Game() {
   if (artworkNdx === -1) return null;
 
   return (
-    <div className="bg-white text-black">
-      <NavMenu />
-      <div className="ml-[50px] flex flex-col items-center">
-        <div className="text-[24pt] mb-5">Game</div>
-
-        <div className="flex flex-col items-center">
-          {artworkNdx > -1 && (
-            <div>
+    <Layout title="Game">
+      <div className="flex flex-col items-center">
+        {artworkNdx > -1 && (
+          <div>
+            <div
+              style={{
+                ...artSpecs,
+                boxShadow: "gray 3px 2px 5px",
+              }}
+              className="mb-5"
+            >
               <div
+                ref={artFrameRef}
                 style={{
-                  ...artSpecs,
-                  boxShadow: "gray 3px 2px 5px",
+                  overflow: "hidden",
+                  maxHeight: `${artFrame.height}px`,
+                  maxWidth: `${artFrame.width}px`,
                 }}
-                className="mb-5"
               >
-                <div
-                  ref={artFrameRef}
-                  style={{
-                    overflow: "hidden",
-                    maxHeight: `${artFrame.height}px`,
-                    maxWidth: `${artFrame.width}px`,
-                  }}
-                >
-                  <img
-                    ref={artEl}
-                    src={`./${artworks[artworkNdx].src}`}
-                    style={imgStyle}
-                  />
-                </div>
-              </div>
-              <div>
-                <input
-                  type="text"
-                  onInput={handleInput}
-                  style={fieldStyle}
-                  className={fieldClasses}
-                  placeholder="Name of artwork"
+                <img
+                  ref={artEl}
+                  src={`./${artworks[artworkNdx].src}`}
+                  style={imgStyle}
                 />
               </div>
-
-              <button className="bg-slate-200 p-2" onClick={handleReposition}>Reposition</button>
             </div>
-          )}
-        </div>
+            <div>
+              <input
+                type="text"
+                onInput={handleInput}
+                style={fieldStyle}
+                className={fieldClasses}
+                placeholder="Name of artwork"
+              />
+            </div>
+
+            <button className="bg-slate-200 p-2" onClick={handleReposition}>Reposition</button>
+          </div>
+        )}
       </div>
-    </div>
+
+    </Layout>
+
   );
 }

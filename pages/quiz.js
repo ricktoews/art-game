@@ -7,8 +7,9 @@ import {
   saveArtSelections,
   getArtSelections,
   fieldClasses,
+  fieldStyle,
 } from "../utils/helpers";
-import NavMenu from "@/components/NavMenu";
+import Layout from "@/components/Layout";
 import { Artifika } from "@next/font/google";
 
 function isAnswerCorrect(actual, expected) {
@@ -113,50 +114,47 @@ export default function Quiz() {
   if (!trainArt) return null;
 
   return (
-    <div className="bg-white text-black">
-      <NavMenu />
 
-      <div className="ml-[50px] flex flex-col items-center">
-        <div className="text-[24pt] mb-5">Quiz</div>
-        <div className="flex flex-col items-center">
-          <div style={imgStyle} className="">
-            <img ref={artEl} src={`./${trainArt.src}`} />
-          </div>
+    <Layout title="Quiz">
+      <div className="flex flex-col items-center">
+        <div style={imgStyle} className="">
+          <img ref={artEl} src={`./${trainArt.src}`} />
+        </div>
 
-          <div className="mb-3 xl:w-96">
-            <input
-              ref={artNameRef}
-              autoComplete="off"
-              type="text"
-              data-fieldname="name"
-              onInput={handleCheckField}
-              style={{ borderBottom: "1px solid gray" }}
-              className={fieldClasses}
-              placeholder="Name of artwork"
-            />
-            <input
-              ref={artArtistRef}
-              autoComplete="off"
-              type="text"
-              data-fieldname="artist"
-              onInput={handleCheckField}
-              style={{ borderBottom: "1px solid gray" }}
-              className={fieldClasses}
-              placeholder="Artist"
-            />
-            <input
-              ref={artDateRef}
-              autoComplete="off"
-              type="text"
-              data-fieldname="date"
-              onInput={handleCheckField}
-              style={{ borderBottom: "1px solid gray" }}
-              className={fieldClasses}
-              placeholder="Date"
-            />
-          </div>
+        <div className="mt-8 mb-3 xl:w-96">
+          <input
+            ref={artNameRef}
+            autoComplete="off"
+            type="text"
+            data-fieldname="name"
+            onInput={handleCheckField}
+            style={fieldStyle}
+            className={fieldClasses}
+            placeholder="Name of artwork"
+          />
+          <input
+            ref={artArtistRef}
+            autoComplete="off"
+            type="text"
+            data-fieldname="artist"
+            onInput={handleCheckField}
+            style={fieldStyle}
+            className={fieldClasses}
+            placeholder="Artist"
+          />
+          <input
+            ref={artDateRef}
+            autoComplete="off"
+            type="text"
+            data-fieldname="date"
+            onInput={handleCheckField}
+            style={fieldStyle}
+            className={fieldClasses}
+            placeholder="Date"
+          />
         </div>
       </div>
-    </div>
+
+    </Layout>
   );
 }

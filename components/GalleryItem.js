@@ -6,7 +6,6 @@ export function GalleryItem(props) {
     maxHeight: `${FRAME_HEIGHT}px`,
     maxWidth: `${FRAME_WIDTH}px`,
   };
-  console.log("====> Gallery Item", item);
   const identifier = item.name;
   const selectedItem = item.selected ? "bg-orange-100" : "bg-white";
   const itemClass = `flex flex-col justify-center items-center p-2 ${selectedItem} cursor-pointer`;

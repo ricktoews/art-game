@@ -34,9 +34,9 @@ export default function NavMenu(props) {
 
       <div
         ref={menuOptionsRef}
-        className="fixed hidden left-2 top-10 bg-white text-black"
+        className="fixed hidden bg-opacity-90 z-10 p-2 top-10 bg-slate-700 text-black"
       >
-        <div className="flex flex-col justify-around text-[16pt] text-gray-400">
+        <div className="flex flex-col divide-y divide-slate-400 justify-around text-[16pt] text-gray-400">
           <div className="hover:text-gray-600 p-1">
             <a href="./">Gallery</a>
           </div>

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { GalleryItem } from "@/components/GalleryItem";
-import NavMenu from "@/components/NavMenu";
+import Masthead from "@/components/Masthead";
+import Layout from "@/components/Layout";
 import { saveArtSelections, getArtSelections } from "../utils/helpers";
 import styles from "@/styles/ArtGame.module.css";
 import Art from "@/data/art";
@@ -47,10 +48,7 @@ export default function Gallery() {
   if (!ArtSelections) return null;
 
   return (
-    <div className="relative bg-white text-black">
-      <NavMenu />
-      <div className="ml-[50px] flex flex-col items-center">
-        <div className="text-[24pt] mb-5">Art Gallery</div>
+    <Layout title="Art Gallery Layout">
         <div className="flex justify-center flex-wrap">
           {ArtSelections.map((item, key) => {
             return (
@@ -63,7 +61,7 @@ export default function Gallery() {
             );
           })}
         </div>
-      </div>
-    </div>
+      
+    </Layout>
   );
 }

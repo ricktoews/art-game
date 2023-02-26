@@ -9,7 +9,7 @@ import {
   fieldClasses,
   fieldStyle,
 } from "../utils/helpers";
-import NavMenu from "@/components/NavMenu";
+import Layout from "@/components/Layout";
 const CORRECT_COLOR = "green";
 
 function fixString(str) {
@@ -149,51 +149,47 @@ export default function Train() {
   if (!trainArt) return null;
 
   return (
-    <div className="bg-white text-black">
-      <NavMenu />
-      <div className="ml-[50px] flex flex-col items-center">
-        <div className="text-[24pt] mb-5">Train</div>
+    <Layout title="Train">
+      <div className="flex flex-col items-center">
+        <div style={imgStyle} className="m-3 p-2">
+          <img ref={artEl} src={`./${trainArt.src}`} />
+        </div>
+        <ArtLabel art={trainArt} />
 
-        <div className="flex flex-col items-center">
-          <div style={imgStyle} className="m-3 p-2">
-            <img ref={artEl} src={`./${trainArt.src}`} />
-          </div>
-          <ArtLabel art={trainArt} />
-
-          <div className="mt-8 mb-3 xl:w-96">
-            <input
-              ref={artNameRef}
-              autoComplete="off"
-              type="text"
-              data-fieldname="name"
-              onInput={handleCheckField}
-              style={fieldStyle}
-              className={fieldClasses}
-              placeholder="Name of artwork"
-            />
-            <input
-              ref={artArtistRef}
-              autoComplete="off"
-              type="text"
-              data-fieldname="artist"
-              onInput={handleCheckField}
-              style={fieldStyle}
-              className={fieldClasses}
-              placeholder="Artist"
-            />
-            <input
-              ref={artDateRef}
-              autoComplete="off"
-              type="text"
-              data-fieldname="date"
-              onInput={handleCheckField}
-              style={fieldStyle}
-              className={fieldClasses}
-              placeholder="Date"
-            />
-          </div>
+        <div className="mt-8 mb-3 xl:w-96">
+          <input
+            ref={artNameRef}
+            autoComplete="off"
+            type="text"
+            data-fieldname="name"
+            onInput={handleCheckField}
+            style={fieldStyle}
+            className={fieldClasses}
+            placeholder="Name of artwork"
+          />
+          <input
+            ref={artArtistRef}
+            autoComplete="off"
+            type="text"
+            data-fieldname="artist"
+            onInput={handleCheckField}
+            style={fieldStyle}
+            className={fieldClasses}
+            placeholder="Artist"
+          />
+          <input
+            ref={artDateRef}
+            autoComplete="off"
+            type="text"
+            data-fieldname="date"
+            onInput={handleCheckField}
+            style={fieldStyle}
+            className={fieldClasses}
+            placeholder="Date"
+          />
         </div>
       </div>
-    </div>
+
+    </Layout>
   );
 }
