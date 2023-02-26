@@ -23,12 +23,12 @@ export default function NavMenu(props) {
     <>
       <div
         onClick={handleMenuClick}
-        className="fixed cursor-pointer p-1.5 z-10 flex flex-col justify-center items-center rounded-full top-1 left-1 w-9 h-9 bg-white"
+        className=" bg-inherit fixed cursor-pointer p-1.5 z-10 flex flex-col justify-center items-center rounded-full top-1 left-1 w-9 h-9"
       >
-        <svg viewBox="0 0 100 80" width="30" height="30">
-          <rect width="100" height="15" rx="10"></rect>
-          <rect y="30" width="80" height="15" rx="10"></rect>
-          <rect y="60" width="100" height="15" rx="10"></rect>
+        <svg viewBox="0 0 100 80" width="30" height="30" style={{background: 'inherit'}}>
+          <rect width="100" height="15" rx="10" style={{fill: "white"}}></rect>
+          <rect y="30" width="80" height="15" rx="10" style={{fill: "white"}}></rect>
+          <rect y="60" width="100" height="15" rx="10" style={{fill: "white"}}></rect>
         </svg>
       </div>
 

@@ -48,7 +48,7 @@ export default function Gallery() {
   if (!ArtSelections) return null;
 
   return (
-    <Layout title="Art Gallery Layout">
+    <Layout title="Art Gallery">
         <div className="flex justify-center flex-wrap">
           {ArtSelections.map((item, key) => {
             return (

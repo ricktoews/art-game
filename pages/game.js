@@ -25,7 +25,7 @@ export default function Game() {
   const artEl = useRef();
   const artFrameRef = useRef(null);
   const [artworkNdx, setArtworkNdx] = useState(-1);
-  const [artSpecs, setArtSpecs] = useState({ height: 0, left: 0});
+  const [artSpecs, setArtSpecs] = useState({ height: 0, left: 0 });
   const [imgStyle, setImgStyle] = useState({
     position: "relative",
     maxHeight: 0,
@@ -115,9 +115,12 @@ export default function Game() {
     const el = e.target;
     const val = el.value;
     if (val.toLowerCase() == artworks[artworkNdx].name.toLowerCase()) {
-      artEl.current.style.top = "";
-      artEl.current.style.left = "";
-      artFrameRef.current.style = {};
+      //artFrameRef.current.style.overflow = 'visible';
+      artFrameRef.current.style.maxHeight = '100%';
+      artFrameRef.current.style.maxWidth = '100%';
+      artEl.current.style.transition = 'top 1s linear, left 1s linear';
+      artEl.current.style.top = 0;
+      artEl.current.style.left = 0;
     }
   }
 
@@ -130,8 +133,18 @@ export default function Game() {
 
   return (
     <Layout title="Game">
+      <div>
+        <input
+          type="text"
+          onInput={handleInput}
+          style={fieldStyle}
+          className={fieldClasses}
+          placeholder="Name of artwork"
+        />
+      </div>
+
       <div className="flex flex-col items-center">
-        {artworkNdx > -1 && (
+        {artworkNdx > -1 && artworks[artworkNdx] && (
           <div>
             <div
               style={{
@@ -154,15 +167,6 @@ export default function Game() {
                   style={imgStyle}
                 />
               </div>
-            </div>
-            <div>
-              <input
-                type="text"
-                onInput={handleInput}
-                style={fieldStyle}
-                className={fieldClasses}
-                placeholder="Name of artwork"
-              />
             </div>
 
             <button className="bg-slate-200 p-2" onClick={handleReposition}>Reposition</button>
