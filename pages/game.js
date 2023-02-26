@@ -14,6 +14,20 @@ const FRAME_HEIGHT = 100;
 
 const artworks = [];
 
+function fixString(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+}
+function isAnswerCorrect(actual, expected) {
+  let result = false;
+  if (actual && expected) {
+    result = fixString(actual) === fixString(expected);
+  }
+  return result;
+}
+
 // Helper function
 const makeProportionate = (newX, x, y) => {
   return Math.round((newX / x) * y);
@@ -135,7 +149,7 @@ export default function Game() {
   function handleInput(e) {
     const el = e.target;
     const val = el.value;
-    if (val.toLowerCase() == artworks[artworkNdx].name.toLowerCase()) {
+    if (isAnswerCorrect(val, artworks[artworkNdx].name)) {
       //artFrameRef.current.style.overflow = 'visible';
       artFrameRef.current.style.maxHeight = '100%';
       artFrameRef.current.style.maxWidth = '100%';
