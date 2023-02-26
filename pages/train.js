@@ -82,10 +82,12 @@ export default function Train() {
       };
       artNameRef.current.style.color = "inherit";
       artNameRef.current.disabled = false;
+/*
       artArtistRef.current.style.color = "inherit";
       artArtistRef.current.disabled = false;
       artDateRef.current.style.color = "inherit";
       artDateRef.current.disabled = false;
+*/
     }
   }, [trainArt]);
 
@@ -94,8 +96,10 @@ export default function Train() {
       const randomArt = selectArtForTraining(ArtSelections, trainingNdx);
       if (artNameRef.current) {
         artNameRef.current.value = "";
+        /*
         artArtistRef.current.value = "";
         artDateRef.current.value = "";
+        */
         artNameRef.current.focus();
       }
       setTrainArt(randomArt);
@@ -106,7 +110,7 @@ export default function Train() {
     router.push("./gallery");
   };
 
-  const fieldsToCheck = ["name", "artist", "date"];
+  const fieldsToCheck = ["name"/*, "artist", "date"*/];
   const correct = {};
   const answers = {};
   const handleCheckField = (e) => {
@@ -125,6 +129,7 @@ export default function Train() {
           artNameRef.current.style.color = CORRECT_COLOR;
           artNameRef.current.disabled = true;
         }
+        /*
         if (item === "artist") {
           artArtistRef.current.style.color = CORRECT_COLOR;
           artArtistRef.current.disabled = true;
@@ -133,6 +138,7 @@ export default function Train() {
           artDateRef.current.style.color = CORRECT_COLOR;
           artDateRef.current.disabled = true;
         }
+        */
       }
     });
 
@@ -151,12 +157,7 @@ export default function Train() {
   return (
     <Layout title="Train">
       <div className="flex flex-col items-center">
-        <div style={imgStyle} className="m-3 p-2">
-          <img ref={artEl} src={`./${trainArt.src}`} />
-        </div>
-        <ArtLabel art={trainArt} />
-
-        <div className="mt-8 mb-3 xl:w-96">
+      <div className="mt-8 mb-3 xl:w-96">
           <input
             ref={artNameRef}
             autoComplete="off"
@@ -167,6 +168,7 @@ export default function Train() {
             className={fieldClasses}
             placeholder="Name of artwork"
           />
+{/*
           <input
             ref={artArtistRef}
             autoComplete="off"
@@ -187,7 +189,14 @@ export default function Train() {
             className={fieldClasses}
             placeholder="Date"
           />
+  */}
         </div>
+
+        <div style={imgStyle} className="m-3 p-2">
+          <img ref={artEl} src={`./${trainArt.src}`} />
+        </div>
+        <ArtLabel art={trainArt} />
+
       </div>
 
     </Layout>

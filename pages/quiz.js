@@ -12,11 +12,16 @@ import {
 import Layout from "@/components/Layout";
 import { Artifika } from "@next/font/google";
 
+function fixString(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+}
 function isAnswerCorrect(actual, expected) {
-  console.log("====> isAnswerCorrect", actual, expected);
   let result = false;
   if (actual && expected) {
-    result = actual.toLowerCase() === expected.toLowerCase();
+    result = fixString(actual) === fixString(expected);
   }
   return result;
 }
@@ -73,8 +78,10 @@ export default function Quiz() {
       const randomArt = selectArtForTraining(ArtSelections, trainingNdx);
       if (artNameRef.current) {
         artNameRef.current.value = "";
+        /*
         artArtistRef.current.value = "";
         artDateRef.current.value = "";
+        */
         artNameRef.current.focus();
       }
       setTrainArt(randomArt);
@@ -85,7 +92,7 @@ export default function Quiz() {
     router.push("./gallery");
   };
 
-  const fieldsToCheck = ["name", "artist", "date"];
+  const fieldsToCheck = ["name"/*, "artist", "date"*/ ];
   const answers = {};
   const handleCheckField = (e) => {
     e.preventDefault();
@@ -117,11 +124,7 @@ export default function Quiz() {
 
     <Layout title="Quiz">
       <div className="flex flex-col items-center">
-        <div style={imgStyle} className="">
-          <img ref={artEl} src={`./${trainArt.src}`} />
-        </div>
-
-        <div className="mt-8 mb-3 xl:w-96">
+      <div className="mt-8 mb-3 xl:w-96">
           <input
             ref={artNameRef}
             autoComplete="off"
@@ -132,6 +135,7 @@ export default function Quiz() {
             className={fieldClasses}
             placeholder="Name of artwork"
           />
+          {/*
           <input
             ref={artArtistRef}
             autoComplete="off"
@@ -152,7 +156,13 @@ export default function Quiz() {
             className={fieldClasses}
             placeholder="Date"
           />
+          */}
         </div>
+
+        <div style={imgStyle} className="">
+          <img ref={artEl} src={`./${trainArt.src}`} />
+        </div>
+
       </div>
 
     </Layout>
