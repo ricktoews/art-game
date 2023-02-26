@@ -7,7 +7,7 @@ export function GalleryItem(props) {
     maxWidth: `${FRAME_WIDTH}px`,
   };
   const identifier = item.name;
-  const selectedItem = item.selected ? "bg-orange-100" : "bg-white";
+  const selectedItem = item.selected ? "border border-white border-1" : "transparent";
   const itemClass = `flex flex-col justify-center items-center p-2 ${selectedItem} cursor-pointer`;
 
   return (
