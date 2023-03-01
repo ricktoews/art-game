@@ -27,7 +27,8 @@ export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, 
         alignItems: 'center',
         width: '80%',
         height: '25%',
-        background: 'rgba(255,255,255,.8)',
+        background: 'rgba(0,0,0,1)',
+        color: 'rgba(255,255,255,1)',
         border: '2px solid black',
         padding: '10px',
     }
@@ -35,14 +36,16 @@ export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, 
     const thumbStyle = {
         maxHeight: `${POPUP_IMG_HEIGHT}px`,
         maxWidth: `${POPUP_IMG_WIDTH}px`,
+        border: '1px solid white'
     };
 
     const popupCloseWrapper = { position: 'absolute', zIndex: 150, width: '100%', display: 'flex', justifyContent: 'flex-end' };
 
     const popupContent = {
         position: 'relative',
-        color: 'black',
-        width: '100%'
+        color: 'inherit',
+        width: '100%',
+        height: '100%'
     };
 
     const handleClose = e => {
@@ -61,19 +64,21 @@ export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, 
                 <div style={popupContent}>
                     <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
                         <div style={{marginRight: '10px'}}>
-                            <img src={popupItem.src} style={thumbStyle} />
-                        </div>
-                        <div>
-                            <ul style={{ fontSize: '8pt', color: 'black' }} className="list-none">
-                                <li>{popupItem.name}</li>
+                            <div style={{ borderBottom: '1px solid gray', marginBottom: '5px', paddingBottom: '5px' }}>
+                                {popupItem.name}
+                            </div>
+                            <ul style={{ fontSize: '8pt', color: 'inherit' }} className="list-none">
                                 <li>{popupItem.artist}</li>
                                 <li>{popupItem.date}</li>
+                                <li>{popupItem.selected?'selected':'not selected'}</li>
                             </ul>
-                            <button onClick={toggleItemSelect}>Toggle</button>
                         </div>
-
+                        <div>
+                            <img src={popupItem.src} style={thumbStyle} />
+                        </div>
                     </div>
                 </div>
+                <button className="p-2 bg-slate-400 rounded-md" onClick={toggleItemSelect}>Toggle</button>
             </div>
         </div >
     )

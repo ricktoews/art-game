@@ -36,6 +36,8 @@ export default function Gallery() {
     setToggleState(setting);
     setItemToggled(popupItem.name);
     saveArtSelections(ArtSelections);
+    const item = ArtSelections.find((item) => item.name === popupItem.name);
+    setPopupItem(item);
     console.log('====> toggleItemSelect ', popupItem);
   }
 
@@ -44,8 +46,7 @@ export default function Gallery() {
     const { identifier } = el.dataset;
 
 //    const setting = toggleArt(ArtSelections, identifier);
-    saveArtSelections(ArtSelections);
-console.log('====> handleItemClick identifier', identifier);
+//    saveArtSelections(ArtSelections);
     const item = ArtSelections.find((item) => item.name === identifier);
     setPopupOpen(true);
     setPopupItem(item);
