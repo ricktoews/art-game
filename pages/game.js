@@ -173,25 +173,14 @@ export default function Game() {
         {artworkNdx > -1 && artworks[artworkNdx] && (
           <div>
             <div
-              style={{
-                ...artSpecs,
-                boxShadow: "gray 3px 2px 5px",
-              }}
+              style={{ ...artSpecs, boxShadow: "gray 3px 2px 5px", }}
               className="mb-5"
             >
               <div
                 ref={artFrameRef}
-                style={{
-                  overflow: "hidden",
-                  maxHeight: `${artFrame.height}px`,
-                  maxWidth: `${artFrame.width}px`,
-                }}
+                style={{ overflow: "hidden", maxHeight: `${artFrame.height}px`, maxWidth: `${artFrame.width}px`, }}
               >
-                <img
-                  ref={artEl}
-                  src={`./${artworks[artworkNdx].src}`}
-                  style={imgStyle}
-                />
+                <img ref={artEl} src={`./${artworks[artworkNdx].src}`} style={imgStyle}/>
               </div>
             </div>
 

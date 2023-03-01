@@ -97,7 +97,7 @@ export default function Train() {
   if (!trainArt) return null;
 
   return (
-    <Layout title="Train">
+    <Layout title="Practice">
       <div className="flex flex-col items-center">
         <ArtInput placeholder="Name of artwork" artNameRef={artNameRef} handleCorrect={handleCorrect} art={trainArt} />
 

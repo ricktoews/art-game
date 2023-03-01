@@ -1,6 +1,9 @@
 export const FRAME_WIDTH = 100;
 export const FRAME_HEIGHT = 100;
 
+export const POPUP_IMG_WIDTH = 150;
+export const POPUP_IMG_HEIGHT = 150;
+
 export const MAX_WIDTH = 250;
 export const MAX_HEIGHT = 250;
 

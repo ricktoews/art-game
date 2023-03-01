@@ -37,10 +37,7 @@ export default function NavMenu(props) {
             <a href="./">Gallery</a>
           </div>
           <div className="hover:text-gray-600 p-1">
-            <a href="./train">Train</a>
-          </div>
-          <div className="hover:text-gray-600 p-1">
-            <a href="./quiz">Quiz</a>
+            <a href="./practice">Practice</a>
           </div>
           <div className="hover:text-gray-600 p-1">
             <a href="./game">Game</a>

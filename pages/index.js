@@ -20,8 +20,10 @@ function toggleArt(ArtSelections, identifier) {
 
 export default function Gallery() {
   const [itemToggled, setItemToggled] = useState("");
-  const [itemToggleState, setItemToggleState] = useState(null);
+  const [toggleState, setToggleState] = useState(null);
   const [ArtSelections, setArtSelections] = useState(Art);
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupItem, setPopupItem] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,19 +31,30 @@ export default function Gallery() {
     setArtSelections(artSelections);
   }, []);
 
+  const toggleItemSelect = () => {
+    const setting = toggleArt(ArtSelections, popupItem.name);
+    setToggleState(setting);
+    setItemToggled(popupItem.name);
+    saveArtSelections(ArtSelections);
+    console.log('====> toggleItemSelect ', popupItem);
+  }
+
   const handleItemClick = (e) => {
     const el = e.currentTarget;
     const { identifier } = el.dataset;
-    const setting = toggleArt(ArtSelections, identifier);
-    setItemToggleState(setting);
-    setItemToggled(identifier);
+
+//    const setting = toggleArt(ArtSelections, identifier);
     saveArtSelections(ArtSelections);
+console.log('====> handleItemClick identifier', identifier);
+    const item = ArtSelections.find((item) => item.name === identifier);
+    setPopupOpen(true);
+    setPopupItem(item);
   };
 
   if (!ArtSelections) return null;
 
   return (
-    <Layout title="Art Gallery">
+    <Layout title="Art Gallery" toggleItemSelect={toggleItemSelect} setPopupOpen={setPopupOpen} popupOpen={popupOpen} popupItem={popupItem}>
         <div className="flex justify-center flex-wrap">
           {ArtSelections.map((item, key) => {
             return (
