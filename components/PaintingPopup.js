@@ -4,6 +4,7 @@ import { POPUP_IMG_WIDTH, POPUP_IMG_HEIGHT } from '@/utils/constants';
 export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, popupItem }) {
     const closeContainerRef = useRef(null);
     const closeBtnRef = useRef(null);
+    const popupContentRef = useRef(null);
 
     const popupContainerStyle = {
         position: 'fixed',
@@ -24,7 +25,7 @@ export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, 
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        width: '85%',
+        width: '90%',
         height: '33%',
         overflowY: 'auto',
         //background: 'rgba(0,0,0,1)',
@@ -43,9 +44,10 @@ export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, 
 
     const popupCloseWrapper = {
         position: 'absolute',
-        top: 0,
-        right: 0,
-        zIndex: 150
+        top: '5px',
+        right: '5px',
+        zIndex: 150,
+        cursor: 'pointer'
     };
 
     const popupContent = {
@@ -66,7 +68,7 @@ export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, 
     const greenCheckbox = (
         <svg width="30" height="30" viewBox="0 0 40 40">
             <circle cx="20" cy="20" r="12" fill="#008000" />
-            <path d="M13,20 l4,4 l8,-8" stroke="#FFF" stroke-width="2" fill="none" />
+            <path d="M13,20 l4,4 l8,-8" stroke="#FFF" strokeWidth="2" fill="none" />
         </svg>
     );
 
@@ -74,26 +76,37 @@ export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, 
         setPopupOpen(false);
     }
 
+    const handleOuterClick = e => {
+        e.preventDefault();
+        const { target } = e;
+        const { current } = popupContentRef;
+        const clickedInPopup = target === current || current.contains(target);
+        if (!clickedInPopup) {
+            setPopupOpen(false);
+        }
+        console.log('====> clicked on', target, target === current, current.contains(target));
+    }
+
     return (
-        <div ref={closeContainerRef} style={popupContainerStyle}> {/* full page transparent overlay block */}
+        <div ref={closeContainerRef} onClick={handleOuterClick} style={popupContainerStyle}> {/* full page transparent overlay block */}
             <div style={popupWrapper}> {/* wrapper to provide a maximum height for popup block */}
 
-                <div style={popupContent}>  {/* visible popup content */}
+                <div ref={popupContentRef} style={popupContent}>  {/* visible popup content */}
 
                     {/* Close Popup icon */}
                     <div style={popupCloseWrapper}>
-                        <svg ref={closeBtnRef} onClick={handleClose} viewBox="0 0 48 48" width="48" height="48">
-                            <circle cx="24" cy="24" r="22" fill="#ccc"></circle>
-                            <path stroke="#fff" strokeWidth="3" d="M13 13l22 22M35 13L13 35"></path>
+                        <svg ref={closeBtnRef} onClick={handleClose} viewBox="0 0 35 35" width="35" height="35">
+                            <circle cx="17.5" cy="17.5" r="16.5" fill="#ccc"></circle>
+                            <path stroke="#fff" strokeWidth="3" d="M9.5 9.5l16.5 16.5M26 9.5L9.5 26"></path>
                         </svg>
                     </div>
 
                     {/* Image thumbnail and information layout */}
-                    <div style={{ width: '100%' }}>
+                    <div style={{ width: 'auto' }}>
 
                         <div style={{ marginBottom: '20px' }}>Tap thumbnail to toggle inclusion.</div>
 
-                        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <div style={{ marginRight: '10px' }}>
                                 <div style={{ borderBottom: '1px solid gray', marginBottom: '5px', paddingBottom: '5px' }}>
                                     {popupItem.name}
@@ -105,7 +118,7 @@ export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, 
 
                             </div>
                             <div>
-                                <div style={{ position: 'relative' }} onClick={toggleItemSelect}>
+                                <div style={{ cursor: 'pointer', position: 'relative' }} onClick={toggleItemSelect}>
                                     <div style={{ position: 'absolute', top: '-12px', left: '-12px' }}>
                                         {popupItem.selected ? greenCheckbox : null}
                                     </div>
