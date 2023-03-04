@@ -13,7 +13,7 @@ export const theme = {
     masthead: {
         background: '#373E40',
         fontFamily: '',
-        color: '#B7D5D4',
+        color: '#fff',
         border: '#B7D5D4'
     },
     galleryItem: {
