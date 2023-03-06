@@ -51,10 +51,11 @@ export default function Gallery() {
 
   useEffect(() => {
     const artSelections = getArtSelections();
-    
+
     // Set default paintings, to make sure we don't start with an empty selection pool.
     if (isSelectionPoolEmpty(artSelections)) {
       addDefaultSelections(artSelections, defaultArt);
+      saveArtSelections(artSelections);
     }
 
     setArtSelections(artSelections);
