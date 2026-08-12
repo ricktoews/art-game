@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { GalleryItem } from "@/components/GalleryItem";
 import Layout from "@/components/Layout";
 import { saveArtSelections, getArtSelections, sortGallery } from "../utils/helpers";
@@ -47,7 +46,7 @@ export default function Gallery() {
   const [ArtSelections, setArtSelections] = useState(Art);
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupItem, setPopupItem] = useState(null);
-  const router = useRouter();
+  const [galleryView, setGalleryView] = useState("grid");
 
   useEffect(() => {
     let _artSelections = getArtSelections();
@@ -58,9 +57,7 @@ export default function Gallery() {
       saveArtSelections(_artSelections);
     }
 
-    console.log('====> Sorted by location? before sort', _artSelections.map(item => item));
     const artSelections = sortGallery(_artSelections);
-    console.log('====> Sorted by location?', artSelections.map(item => item.location));
     setArtSelections(artSelections);
   }, []);
 
@@ -71,7 +68,6 @@ export default function Gallery() {
     saveArtSelections(ArtSelections);
     const item = ArtSelections.find((item) => item.name === popupItem.name);
     setPopupItem(item);
-    console.log('====> toggleItemSelect ', popupItem);
   }
 
   const handleItemClick = (e) => {
@@ -87,52 +83,98 @@ export default function Gallery() {
 
   if (!ArtSelections) return null;
 
-  let lastGroup = '';
+  const selectedArt = ArtSelections.filter((item) => item.selected);
+  const unselectedArt = ArtSelections.filter((item) => !item.selected);
+  const artistGroups = Array.from(
+    ArtSelections.reduce((groups, item) => {
+      const artist = item.artist || "Unknown artist";
+      if (!groups.has(artist)) groups.set(artist, []);
+      groups.get(artist).push(item);
+      return groups;
+    }, new Map())
+  ).map(([artist, artworks]) => ({ artist, artworks }));
+
   return (
     <Layout title="Art Gallery" toggleItemSelect={toggleItemSelect} setPopupOpen={setPopupOpen} popupOpen={popupOpen} popupItem={popupItem}>
-      <section className="w-full max-w-[640px]">
-        <h2 className="mb-6 px-4 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
-          Selected for Practice &amp; Game
-        </h2>
-        <div className="flex w-full flex-wrap justify-center gap-x-8 gap-y-5 px-4">
-          {ArtSelections.filter(item => item.selected).map((item, key) => {
-            return (
-              <GalleryItem
-                handleItemClick={handleItemClick}
-                item={item}
-                key={key}
-                itemkey={key}
-              ></GalleryItem>
-            );
-          })}
-        </div>
-      </section>
-      <section className="mt-12 w-full max-w-[640px] border-t border-slate-300 pt-8">
-        <h2 className="mb-6 px-4 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
-          More Paintings
-        </h2>
-        <div className="flex w-full flex-wrap justify-center gap-x-8 gap-y-5 px-4">
-          {ArtSelections.filter(item => !item.selected).map((item, key) => {
-            const group = item.artist || 'Unspecified';
-            let galleryItem = (
-              <GalleryItem
-                handleItemClick={handleItemClick}
-                item={item}
-                key={key}
-                itemkey={key}
-              ></GalleryItem>
-            );
-            if (false && group !== lastGroup) {
-              lastGroup = group;
-              return <><br /><div style={{ width: '90%', textAlign: 'center' }}>{group}</div><br />{galleryItem}</>
-            }
-            else {
-              return galleryItem;
-            }
+      <div className="mb-8 flex rounded-full border border-slate-300 bg-white p-1 text-sm shadow-sm">
+        <button
+          className={`rounded-full px-4 py-2 transition ${galleryView === "grid" ? "bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
+          onClick={() => setGalleryView("grid")}
+          type="button"
+        >
+          Gallery
+        </button>
+        <button
+          className={`rounded-full px-4 py-2 transition ${galleryView === "artist" ? "bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
+          onClick={() => setGalleryView("artist")}
+          type="button"
+        >
+          By artist
+        </button>
+      </div>
 
-          })}
-        </div>
-      </section>
+      {galleryView === "grid" ? (
+        <>
+          <section className="w-full max-w-[640px]">
+            <h2 className="mb-6 px-4 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
+              Selected for Practice &amp; Game
+            </h2>
+            <div className="flex w-full flex-wrap justify-center gap-x-8 gap-y-5 px-4">
+              {selectedArt.map((item, key) => (
+                <GalleryItem
+                  handleItemClick={handleItemClick}
+                  item={item}
+                  key={item.name}
+                  itemkey={key}
+                />
+              ))}
+            </div>
+          </section>
+          <section className="mt-12 w-full max-w-[640px] border-t border-slate-300 pt-8">
+            <h2 className="mb-6 px-4 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
+              More Paintings
+            </h2>
+            <div className="flex w-full flex-wrap justify-center gap-x-8 gap-y-5 px-4">
+              {unselectedArt.map((item, key) => (
+                <GalleryItem
+                  handleItemClick={handleItemClick}
+                  item={item}
+                  key={item.name}
+                  itemkey={key}
+                />
+              ))}
+            </div>
+          </section>
+        </>
+      ) : (
+        <section className="w-full max-w-[640px] px-4">
+          <h2 className="mb-7 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
+            Paintings by Artist
+          </h2>
+          <div className="space-y-10">
+            {artistGroups.map((group) => (
+              <section key={group.artist}>
+                <div className="mb-4 flex items-baseline justify-between border-b border-slate-200 pb-2">
+                  <h3 className="font-semibold text-slate-800">{group.artist}</h3>
+                  <span className="text-xs text-slate-400">
+                    {group.artworks.length} {group.artworks.length === 1 ? "work" : "works"}
+                  </span>
+                </div>
+                <div className="flex flex-wrap justify-center gap-x-8 gap-y-5">
+                  {group.artworks.map((item, key) => (
+                    <GalleryItem
+                      handleItemClick={handleItemClick}
+                      item={item}
+                      key={item.name}
+                      itemkey={key}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </section>
+      )}
 
     </Layout>
   );

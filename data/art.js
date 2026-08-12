@@ -355,6 +355,223 @@ const artwork = [
     artist: "Vincent van Gogh",
     date: "1889",
     location: ""
+  },
+  {
+    src: "virgin-and-child-with-an-angel.jpeg",
+    name: "Virgin and Child with an Angel",
+    artist: "Sandro Botticelli",
+    date: "1475–85",
+    location: "Art Institute of Chicago",
+    museumId: 80530,
+    source: "Art Institute of Chicago",
+    isPublicDomain: true
+  },
+  {
+    src: "the-resurrection.jpeg",
+    name: "The Resurrection",
+    artist: "Cecco del Caravaggio",
+    date: "c. 1619-20",
+    location: "Art Institute of Chicago",
+    museumId: 19336,
+    source: "Art Institute of Chicago",
+    isPublicDomain: true
+  },
+  {
+    src: "head-of-medusa.jpeg",
+    name: "Head of Medusa",
+    artist: "Antonio Canova",
+    date: "c. 1801",
+    location: "Art Institute of Chicago",
+    museumId: 160236,
+    source: "Art Institute of Chicago",
+    isPublicDomain: true
+  },
+  {
+    src: "medusa.jpeg",
+    name: "Medusa",
+    artist: "Caravaggio",
+    date: "1595–1596",
+    location: "Uffizi Gallery",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AMedusa_by_Carvaggio.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "death-of-virgin.jpeg",
+    name: "The Death of the Virgin",
+    artist: "Caravaggio",
+    date: "1605-1606",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AMichelangelo_Caravaggio_069.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "fortune-teller.jpeg",
+    name: "The Fortune Teller",
+    artist: "Caravaggio",
+    date: "circa 1594",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AThe_Fortune_Teller-Caravaggio_(Rome).jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "judith-beheading-holofernes.jpeg",
+    name: "Judith Beheading Holofernes",
+    artist: "Caravaggio",
+    date: "circa 1598-1599",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AJudith_Beheading_Holofernes_by_Caravaggio.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "ninth-wave.jpeg",
+    name: "The Ninth Wave",
+    artist: "Ivan Aivazovsky",
+    date: "1850",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AIvan_Constantinovich_Aivazovsky_-_The_Ninth_Wave_(detail).JPG",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "black-sea.jpeg",
+    name: "The Black Sea",
+    artist: "Ivan Aivazovsky",
+    date: "1881",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AAivazovsky_-_The_Black_Sea.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "milkmaid.jpeg",
+    name: "The Milkmaid",
+    artist: "Johannes Vermeer",
+    date: "circa 1658",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AVermeer%2C_Johannes_-_The_Milkmaid%2C_detail_table_-_c._1658.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "astronomer.jpeg",
+    name: "The Astronomer",
+    artist: "Johannes Vermeer",
+    date: "circa 1668",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AJan_Vermeer_-_The_Astronomer.JPG",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "little-street.jpeg",
+    name: "The Little Street",
+    artist: "Johannes Vermeer",
+    date: "between 1657 and 1658",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AJohannes_Vermeer_-_The_Little_Street_-_WGA24617.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "girl-reading-letter-at-open-window.jpeg",
+    name: "Girl Reading a Letter at an Open Window",
+    artist: "Johannes Vermeer",
+    date: "circa 1657",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AJohannes_Vermeer_-_Girl_Reading_a_Letter_at_an_Open_Window_-_WGA24614.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "woman-holding-balance.jpeg",
+    name: "Woman Holding a Balance",
+    artist: "Johannes Vermeer",
+    date: "circa 1665",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AJan_Vermeer_van_Delft_015.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "woman-in-blue-reading-letter.jpeg",
+    name: "Woman in Blue Reading a Letter",
+    artist: "Johannes Vermeer",
+    date: "between 1663 and 1664",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AJohannes_Vermeer_-_Woman_in_Blue_Reading_a_Letter_-_WGA24657.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "last-supper-leonardo-da-vinci.jpeg",
+    name: "The-last-supper-leonardo-da-vinci",
+    artist: "Leonardo da Vinci",
+    date: "2014-06-06 09:51:25",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AThe-last-supper-leonardo-da-vinci.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "ginevra-de-benci.jpeg",
+    name: "Ginevra de’ Benci",
+    artist: "Leonardo da Vinci",
+    date: "1474-1478",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AGinevra_de'_Benci_by_Leonardo_da_Vinci.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "benois-madonna.jpeg",
+    name: "Benois Madonna",
+    artist: "Leonardo da Vinci",
+    date: "between 1478 and 1480",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3ALeonardo_da_Vinci_Benois_Madonna.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "saint-john-baptist.jpeg",
+    name: "Saint John the Baptist",
+    artist: "Leonardo da Vinci",
+    date: "from 1513 until 1516",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3ALeonardo_da_Vinci_-_Saint_John_the_Baptist_C2RMF_retouched.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "adoration-of-magi.jpeg",
+    name: "Adoration of the Magi",
+    artist: "Leonardo da Vinci",
+    date: "from 1480 until 1482",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3ALeonardo_da_Vinci_-_Adorazione_dei_Magi_-_Google_Art_Project.jpg",
+    license: "Public domain",
+    isPublicDomain: true
   }
 ];
 
