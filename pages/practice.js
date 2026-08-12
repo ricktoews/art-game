@@ -1,113 +1,186 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import {
-  MAX_HEIGHT,
-  MAX_WIDTH
-} from '@/utils/constants';
-import {
-  makeProportionate,
-  saveArtSelections,
-  getArtSelections,
-  fieldClasses,
-  fieldStyle,
-} from "@/utils/helpers";
 import Layout from "@/components/Layout";
-import ArtInput from "@/components/ArtInput";
+import { getArtSelections } from "@/utils/helpers";
 
-function ArtLabel(props) {
-  const { art } = props;
-  return (
-    <div className="text-sm">
-      <div>{art.name}</div>
-      <div>{art.artist}</div>
-      <div>{art.date}</div>
-    </div>
-  );
+function shuffle(items) {
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [
+      shuffled[randomIndex],
+      shuffled[index],
+    ];
+  }
+  return shuffled;
 }
 
-function selectArtForTraining(ArtSelections, ndx) {
-  const randomArt = ArtSelections[ndx];
-  return randomArt;
-}
-
-export default function Train() {
-  const [ArtSelections, setArtSelections] = useState([]);
-  const [trainingNdx, setTrainingNdx] = useState();
-  const [trainArt, setTrainArt] = useState(null);
-  const [imgStyle, setImgStyle] = useState({});
-  const artEl = useRef(null);
-  const artNameRef = useRef(null);
-
+export default function Practice() {
+  const [selectedArt, setSelectedArt] = useState([]);
+  const [queue, setQueue] = useState([]);
+  const [revealed, setRevealed] = useState(false);
+  const [ready, setReady] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    let items = getArtSelections();
-    items = items.filter((item) => item.selected);
-    setArtSelections(items);
-    setTrainingNdx(0);
+    const items = getArtSelections().filter((item) => item.selected);
+    setSelectedArt(items);
+    setQueue(shuffle(items));
+    setReady(true);
   }, []);
 
-  useEffect(() => {
-    if (artEl.current) {
-      artEl.current.onload = (e) => {
-        const { width, height } = artEl.current;
-        let adjustedHeight, adjustedWidth;
-        if (width > height) {
-          adjustedWidth = MAX_WIDTH;
-          adjustedHeight = makeProportionate(adjustedWidth, width, height);
-        } else {
-          adjustedHeight = MAX_HEIGHT;
-          adjustedWidth = makeProportionate(adjustedHeight, height, width);
-        }
-        setImgStyle({
-          position: "relative",
-          boxShadow: "gray 3px 2px 5px",
-          maxHeight: `${adjustedHeight}px`,
-          maxWidth: `${adjustedWidth}px`,
-        });
-      };
-      artNameRef.current.style.color = "inherit";
-      artNameRef.current.disabled = false;
-    }
-  }, [trainArt]);
+  const currentArt = queue[0];
 
-  useEffect(() => {
-    if (ArtSelections.length > 0) {
-      const randomArt = selectArtForTraining(ArtSelections, trainingNdx);
-      if (artNameRef.current) {
-        artNameRef.current.value = "";
-        artNameRef.current.focus();
-      }
-      setTrainArt(randomArt);
-    }
-  }, [trainingNdx]);
-
-  const handleGalleryClick = (e) => {
-    router.push("./gallery");
+  const startRound = () => {
+    setQueue(shuffle(selectedArt));
+    setRevealed(false);
   };
 
-  const handleCorrect = (e) => {
-    let ndx = trainingNdx + 1;
-    if (ndx >= ArtSelections.length) {
-      ndx = 0;
-    }
-    setTrainingNdx(ndx);
+  const handleAgain = () => {
+    const [, ...remaining] = queue;
+    const insertionIndex = Math.min(2, remaining.length);
+    const nextQueue = [...remaining];
+    nextQueue.splice(insertionIndex, 0, currentArt);
+    setQueue(nextQueue);
+    setRevealed(false);
+  };
+
+  const handleGotIt = () => {
+    setQueue((currentQueue) => currentQueue.slice(1));
+    setRevealed(false);
+  };
+
+  if (!ready) return null;
+
+  if (selectedArt.length === 0) {
+    return (
+      <Layout title="Practice">
+        <div className="mx-4 w-full max-w-md rounded-sm border border-slate-200 bg-white p-8 text-center shadow-sm">
+          <h1 className="text-2xl font-semibold text-slate-900">
+            Choose some paintings first
+          </h1>
+          <p className="mt-3 text-slate-600">
+            Select paintings in the Gallery to build a practice round.
+          </p>
+          <button
+            className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white"
+            onClick={() => router.push("/")}
+            type="button"
+          >
+            Go to Gallery
+          </button>
+        </div>
+      </Layout>
+    );
   }
 
-  if (!trainArt) return null;
+  if (!currentArt) {
+    return (
+      <Layout title="Practice">
+        <div className="mx-4 w-full max-w-md rounded-sm border border-slate-200 bg-white p-8 text-center shadow-sm">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-2xl font-bold text-white">
+            ✓
+          </div>
+          <h1 className="mt-5 text-2xl font-semibold text-slate-900">
+            Round complete
+          </h1>
+          <p className="mt-3 text-slate-600">
+            You recalled all {selectedArt.length} selected paintings.
+          </p>
+          <button
+            className="mt-7 w-full bg-slate-800 px-5 py-3 font-semibold text-white"
+            onClick={startRound}
+            type="button"
+          >
+            Practice again
+          </button>
+          <button
+            className="mt-3 w-full border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700"
+            onClick={() => router.push("/game")}
+            type="button"
+          >
+            Go to Game
+          </button>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout title="Practice">
-      <div className="flex flex-col items-center">
-        <ArtInput placeholder="Name of artwork" artNameRef={artNameRef} handleCorrect={handleCorrect} art={trainArt} />
-
-        <div style={imgStyle} className="m-3 p-2">
-          <img ref={artEl} src={`./${trainArt.src}`} />
+      <main className="w-full max-w-md px-4">
+        <div className="mb-5 flex items-center justify-between text-sm text-slate-500">
+          <span>{queue.length} remaining</span>
+          <span>{selectedArt.length} in this round</span>
         </div>
-        <ArtLabel art={trainArt} artNameRef={artNameRef} />
 
-      </div>
+        <section className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
+          <button
+            aria-label={revealed ? currentArt.name : "Reveal painting details"}
+            className="flex min-h-[310px] w-full items-center justify-center bg-slate-100 p-5 sm:min-h-[360px] sm:p-8"
+            onClick={() => setRevealed(true)}
+            type="button"
+          >
+            <img
+              alt="Artwork to identify"
+              className="max-h-[48vh] max-w-full object-contain shadow-md"
+              src={currentArt.src}
+            />
+          </button>
 
+          <div className="min-h-[170px] p-6 text-center">
+            {revealed ? (
+              <>
+                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  The answer is
+                </div>
+                <h1 className="mt-3 text-2xl font-semibold leading-tight text-slate-900">
+                  {currentArt.name}
+                </h1>
+                <p className="mt-2 text-slate-600">
+                  {currentArt.artist}
+                  {currentArt.date ? ` · ${currentArt.date}` : ""}
+                </p>
+              </>
+            ) : (
+              <>
+                <h1 className="text-xl font-semibold text-slate-900">
+                  Do you remember this painting?
+                </h1>
+                <p className="mt-2 text-sm text-slate-500">
+                  Say the title to yourself, then reveal the answer.
+                </p>
+                <button
+                  className="mt-5 w-full bg-slate-800 px-5 py-3 font-semibold text-white"
+                  onClick={() => setRevealed(true)}
+                  type="button"
+                >
+                  Reveal
+                </button>
+              </>
+            )}
+          </div>
+        </section>
+
+        {revealed ? (
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <button
+              className="border border-slate-300 bg-white px-4 py-4 font-semibold text-slate-700 shadow-sm"
+              onClick={handleAgain}
+              type="button"
+            >
+              Again
+            </button>
+            <button
+              className="bg-emerald-600 px-4 py-4 font-semibold text-white shadow-sm"
+              onClick={handleGotIt}
+              type="button"
+            >
+              Got it
+            </button>
+          </div>
+        ) : null}
+      </main>
     </Layout>
   );
 }

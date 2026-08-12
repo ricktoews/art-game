@@ -1,49 +1,99 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
-export default function NavMenu(props) {
-    const menuOptionsRef = useRef(null);
+const menuItems = [
+  { href: "/", label: "Gallery", description: "Choose your paintings" },
+  { href: "/practice", label: "Practice", description: "Learn with flashcards" },
+  { href: "/game", label: "Game", description: "Test your memory" },
+];
 
-    const handleMenuClick = (e) => {
-        if (menuOptionsRef.current) {
-            let currentState =
-                menuOptionsRef.current.style.display !== "block" ? 0 : 1;
-            if (currentState) {
-                menuOptionsRef.current.style.display = "none";
-            } else {
-                menuOptionsRef.current.style.display = "block";
-            }
-        }
+export default function NavMenu() {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event) => {
+      if (!menuRef.current?.contains(event.target)) setOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setOpen(false);
     };
 
-    return (
-        <>
-            <div
-                onClick={handleMenuClick}
-                className=" bg-inherit fixed cursor-pointer p-1.5 z-10 flex flex-col justify-center items-center rounded-full top-1 left-1 w-9 h-9"
-            >
-                <svg viewBox="0 0 100 80" width="30" height="30" style={{ background: 'inherit' }}>
-                    <rect width="100" height="15" rx="10" style={{ fill: "white" }}></rect>
-                    <rect y="30" width="80" height="15" rx="10" style={{ fill: "white" }}></rect>
-                    <rect y="60" width="100" height="15" rx="10" style={{ fill: "white" }}></rect>
-                </svg>
-            </div>
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
 
-            <div
-                ref={menuOptionsRef}
-                className="fixed hidden bg-opacity-90 z-10 p-2 top-[52px] bg-[#373E40] text-black"
-            >
-                <div className="flex flex-col divide-y divide-slate-400 justify-around text-[16pt] text-gray-400">
-                    <div className="hover:text-white p-1">
-                        <a href="./">Gallery</a>
-                    </div>
-                    <div className="hover:text-white p-1">
-                        <a href="./practice">Practice</a>
-                    </div>
-                    <div className="hover:text-white p-1">
-                        <a href="./game">Game</a>
-                    </div>
-                </div>
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <nav ref={menuRef} aria-label="Main navigation">
+      <button
+        aria-expanded={open}
+        aria-label={open ? "Close navigation" : "Open navigation"}
+        className="fixed left-3 top-2 z-30 flex h-10 w-10 items-center justify-center rounded-full text-white/90 transition hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+        onClick={() => setOpen((current) => !current)}
+        type="button"
+      >
+        <span className="relative block h-4 w-6" aria-hidden="true">
+          <span
+            className={`absolute left-0 top-0 block h-px w-6 bg-current transition-transform duration-200 ${
+              open ? "translate-y-[7px] rotate-45" : ""
+            }`}
+          />
+          <span
+            className={`absolute left-0 top-[7px] block h-px w-5 bg-current transition-opacity duration-200 ${
+              open ? "opacity-0" : "opacity-100"
+            }`}
+          />
+          <span
+            className={`absolute left-0 top-[14px] block h-px w-6 bg-current transition-transform duration-200 ${
+              open ? "-translate-y-[7px] -rotate-45" : ""
+            }`}
+          />
+        </span>
+      </button>
+
+      {open ? (
+        <div className="fixed left-3 top-14 z-20 w-64 overflow-hidden rounded-sm border border-slate-200 bg-white text-slate-900 shadow-xl">
+          <div className="border-b border-slate-200 px-5 py-4">
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Art Game
             </div>
-        </>
-    );
+          </div>
+          <div className="p-2">
+            {menuItems.map((item) => {
+              const active = router.pathname === item.href;
+              return (
+                <Link
+                  aria-current={active ? "page" : undefined}
+                  className={`block border-l-2 px-4 py-3 transition ${
+                    active
+                      ? "border-emerald-600 bg-emerald-50 text-slate-900"
+                      : "border-transparent text-slate-700 hover:bg-slate-50 hover:text-slate-950"
+                  }`}
+                  href={item.href}
+                  key={item.href}
+                  onClick={() => setOpen(false)}
+                >
+                  <div className="font-semibold">{item.label}</div>
+                  <div className="mt-0.5 text-xs text-slate-500">
+                    {item.description}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+    </nav>
+  );
 }
