@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { GalleryItem } from "@/components/GalleryItem";
 import Layout from "@/components/Layout";
-import { saveArtSelections, getArtSelections } from "../utils/helpers";
+import { saveArtSelections, getArtSelections, sortGallery } from "../utils/helpers";
 import Art from "@/data/art";
 
 /* Defaults, and functions to check for an empty selection pool and supply the defaults. */
@@ -50,14 +50,17 @@ export default function Gallery() {
   const router = useRouter();
 
   useEffect(() => {
-    const artSelections = getArtSelections();
+    let _artSelections = getArtSelections();
 
     // Set default paintings, to make sure we don't start with an empty selection pool.
-    if (isSelectionPoolEmpty(artSelections)) {
-      addDefaultSelections(artSelections, defaultArt);
-      saveArtSelections(artSelections);
+    if (isSelectionPoolEmpty(_artSelections)) {
+      addDefaultSelections(_artSelections, defaultArt);
+      saveArtSelections(_artSelections);
     }
 
+    console.log('====> Sorted by location? before sort', _artSelections.map(item => item));
+    const artSelections = sortGallery(_artSelections);
+    console.log('====> Sorted by location?', artSelections.map(item => item.location));
     setArtSelections(artSelections);
   }, []);
 
@@ -84,20 +87,52 @@ export default function Gallery() {
 
   if (!ArtSelections) return null;
 
+  let lastGroup = '';
   return (
     <Layout title="Art Gallery" toggleItemSelect={toggleItemSelect} setPopupOpen={setPopupOpen} popupOpen={popupOpen} popupItem={popupItem}>
-      <div className="flex justify-center flex-wrap">
-        {ArtSelections.map((item, key) => {
-          return (
-            <GalleryItem
-              handleItemClick={handleItemClick}
-              item={item}
-              key={key}
-              itemkey={key}
-            ></GalleryItem>
-          );
-        })}
-      </div>
+      <section className="w-full max-w-[640px]">
+        <h2 className="mb-6 px-4 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
+          Selected for Practice &amp; Game
+        </h2>
+        <div className="flex w-full flex-wrap justify-center gap-x-8 gap-y-5 px-4">
+          {ArtSelections.filter(item => item.selected).map((item, key) => {
+            return (
+              <GalleryItem
+                handleItemClick={handleItemClick}
+                item={item}
+                key={key}
+                itemkey={key}
+              ></GalleryItem>
+            );
+          })}
+        </div>
+      </section>
+      <section className="mt-12 w-full max-w-[640px] border-t border-slate-300 pt-8">
+        <h2 className="mb-6 px-4 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
+          More Paintings
+        </h2>
+        <div className="flex w-full flex-wrap justify-center gap-x-8 gap-y-5 px-4">
+          {ArtSelections.filter(item => !item.selected).map((item, key) => {
+            const group = item.artist || 'Unspecified';
+            let galleryItem = (
+              <GalleryItem
+                handleItemClick={handleItemClick}
+                item={item}
+                key={key}
+                itemkey={key}
+              ></GalleryItem>
+            );
+            if (false && group !== lastGroup) {
+              lastGroup = group;
+              return <><br /><div style={{ width: '90%', textAlign: 'center' }}>{group}</div><br />{galleryItem}</>
+            }
+            else {
+              return galleryItem;
+            }
+
+          })}
+        </div>
+      </section>
 
     </Layout>
   );

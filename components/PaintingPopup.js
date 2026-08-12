@@ -1,137 +1,111 @@
-import { useRef } from 'react';
-import { POPUP_IMG_WIDTH, POPUP_IMG_HEIGHT } from '@/utils/constants';
+import { useEffect } from "react";
 
-export default function PaintingPopup({ toggleItemSelect, active, setPopupOpen, popupItem }) {
-    const closeContainerRef = useRef(null);
-    const closeBtnRef = useRef(null);
-    const popupContentRef = useRef(null);
+export default function PaintingPopup({
+  toggleItemSelect,
+  active,
+  setPopupOpen,
+  popupItem,
+}) {
+  useEffect(() => {
+    if (!active) return;
 
-    const popupContainerStyle = {
-        position: 'fixed',
-        zIndex: 100,
-        top: 0,
-        left: 0,
-        justifyContent: 'center',
-        width: '100vw',
-        height: '100vh',
-        background: 'rgba(255,255,255,.2)',
-    };
-    popupContainerStyle.display = active ? 'flex' : 'none';
-
-    const popupWrapper = {
-        position: 'relative',
-        top: '70px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        width: '90%',
-        height: '33%',
-        overflowY: 'auto',
-        //background: 'rgba(0,0,0,1)',
-        color: 'rgba(255,255,255,1)',
-        padding: '10px',
-    }
-
-    const thumbStyle = {
-        maxHeight: `${POPUP_IMG_HEIGHT}px`,
-        maxWidth: `${POPUP_IMG_WIDTH}px`,
-        border: '1px solid white'
-    };
-    if (!popupItem.selected) {
-        thumbStyle.filter = 'saturate(20%)';
-    }
-
-    const popupCloseWrapper = {
-        position: 'absolute',
-        top: '5px',
-        right: '5px',
-        zIndex: 150,
-        cursor: 'pointer'
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setPopupOpen(false);
     };
 
-    const popupContent = {
-        border: '2px solid black',
-        backgroundColor: 'black',
-        position: 'relative',
-        color: 'inherit',
-        width: '100%',
-        marginBottom: '10px',
-        padding: '10px',
-        maxHeight: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
     };
+  }, [active, setPopupOpen]);
 
-    // With lots of attempts using ChatGPT, this is the Selected icon I chose.
-    const greenCheckbox = (
-        <svg width="30" height="30" viewBox="0 0 40 40">
-            <circle cx="20" cy="20" r="12" fill="#008000" />
-            <path d="M13,20 l4,4 l8,-8" stroke="#FFF" strokeWidth="2" fill="none" />
-        </svg>
-    );
+  if (!active || !popupItem?.src) return null;
 
-    const handleClose = e => {
-        setPopupOpen(false);
-    }
+  const selected = !!popupItem.selected;
+  const actionLabel = selected
+    ? "Remove from Practice & Game"
+    : "Add to Practice & Game";
 
-    const handleOuterClick = e => {
-        e.preventDefault();
-        const { target } = e;
-        const { current } = popupContentRef;
-        const clickedInPopup = target === current || current.contains(target);
-        if (!clickedInPopup) {
-            setPopupOpen(false);
-        }
-        console.log('====> clicked on', target, target === current, current.contains(target));
-    }
+  const handleBackdropClick = (event) => {
+    if (event.target === event.currentTarget) setPopupOpen(false);
+  };
 
-    return (
-        <div ref={closeContainerRef} onClick={handleOuterClick} style={popupContainerStyle}> {/* full page transparent overlay block */}
-            <div style={popupWrapper}> {/* wrapper to provide a maximum height for popup block */}
+  return (
+    <div
+      aria-label={`${popupItem.name} details`}
+      aria-modal="true"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm"
+      onClick={handleBackdropClick}
+      role="dialog"
+    >
+      <div className="relative flex max-h-[calc(100vh-2rem)] w-full max-w-lg flex-col overflow-hidden rounded-sm bg-white text-slate-900 shadow-2xl">
+        <button
+          aria-label="Close painting details"
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-2xl leading-none text-slate-700 shadow transition hover:bg-white hover:text-black"
+          onClick={() => setPopupOpen(false)}
+          type="button"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
 
-                <div ref={popupContentRef} style={popupContent}>  {/* visible popup content */}
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <button
+            aria-label={`${actionLabel}: ${popupItem.name}`}
+            className="relative flex w-full cursor-pointer items-center justify-center bg-slate-100 p-6 sm:p-8"
+            onClick={toggleItemSelect}
+            type="button"
+          >
+            <img
+              alt={popupItem.name}
+              className={`max-h-[50vh] max-w-full object-contain shadow-md transition ${
+                selected ? "" : "saturate-[.65]"
+              }`}
+              src={popupItem.src}
+            />
+            {selected ? (
+              <span className="absolute bottom-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-xl font-bold text-white shadow-md sm:bottom-6 sm:right-6">
+                <span aria-hidden="true">✓</span>
+                <span className="sr-only">Selected</span>
+              </span>
+            ) : null}
+          </button>
 
-                    {/* Close Popup icon */}
-                    <div style={popupCloseWrapper}>
-                        <svg ref={closeBtnRef} onClick={handleClose} viewBox="0 0 35 35" width="35" height="35">
-                            <circle cx="17.5" cy="17.5" r="16.5" fill="#ccc"></circle>
-                            <path stroke="#fff" strokeWidth="3" d="M9.5 9.5l16.5 16.5M26 9.5L9.5 26"></path>
-                        </svg>
-                    </div>
-
-                    {/* Image thumbnail and information layout */}
-                    <div style={{ width: 'auto' }}>
-
-                        <div style={{ marginBottom: '20px' }}>Tap thumbnail to toggle inclusion.</div>
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <div style={{ marginRight: '10px' }}>
-                                <div style={{ borderBottom: '1px solid gray', marginBottom: '5px', paddingBottom: '5px' }}>
-                                    {popupItem.name}
-                                </div>
-                                <ul style={{ fontSize: '8pt', color: 'inherit' }} className="list-none">
-                                    <li>{popupItem.artist}</li>
-                                    <li>{popupItem.date}</li>
-                                </ul>
-
-                            </div>
-                            <div>
-                                <div style={{ cursor: 'pointer', position: 'relative' }} onClick={toggleItemSelect}>
-                                    <div style={{ position: 'absolute', top: '-12px', left: '-12px' }}>
-                                        {popupItem.selected ? greenCheckbox : null}
-                                    </div>
-                                    <img src={popupItem.src} style={thumbStyle} />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                </div>
+          <div className="p-6 sm:p-8">
+            <div
+              className={`mb-3 text-xs font-semibold uppercase tracking-[0.16em] ${
+                selected ? "text-emerald-700" : "text-slate-500"
+              }`}
+            >
+              {selected ? "Selected" : "Not selected"}
             </div>
-        </div >
-    )
+            <h2 className="text-2xl font-semibold leading-tight text-slate-900">
+              {popupItem.name}
+            </h2>
+            <p className="mt-2 text-base text-slate-600">
+              {popupItem.artist}
+              {popupItem.date ? ` · ${popupItem.date}` : ""}
+            </p>
+          </div>
+        </div>
+
+        <div className="shrink-0 border-t border-slate-200 bg-white p-4 sm:px-8 sm:py-5">
+          <button
+            className={`w-full px-5 py-3 text-sm font-semibold transition ${
+              selected
+                ? "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                : "bg-slate-800 text-white hover:bg-slate-700"
+            }`}
+            onClick={toggleItemSelect}
+            type="button"
+          >
+            {actionLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }

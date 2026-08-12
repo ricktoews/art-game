@@ -94,3 +94,36 @@ export function handleImgLoad(src) {
     }
   };
 }
+
+
+function _sortBySelected(a, b) {
+  return a.selected ? -1 : 1;
+}
+
+function _sortByLocation(a, b) {
+  return a.location + ':' + a.name < b.location + ':' + b.name ? -1 : 1;
+}
+
+function makeNameSortable(n) {
+  const nameParts = n.split(' ');
+  let last = nameParts.pop();
+  if (last.indexOf("'") !== -1) {
+    last = last.substring(last.indexOf("'") + 1);
+  }
+  const rest = nameParts.join(' ');
+  const sortableName = `${last}, ${rest}`;
+  return sortableName;
+}
+
+function _sortByArtist(a, b) {
+  const aArtist = makeNameSortable(a.artist);
+  const bArtist = makeNameSortable(b.artist);
+  return aArtist + ':' + a.name < bArtist + ':' + b.name ? -1 : 1;
+}
+
+
+export function sortGallery(art) {
+  art.sort(_sortBySelected);
+  art.sort(_sortByArtist);
+  return art;
+}
