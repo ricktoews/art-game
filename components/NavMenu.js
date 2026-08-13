@@ -6,6 +6,7 @@ const menuItems = [
   { href: "/", label: "Gallery", description: "Choose your paintings" },
   { href: "/practice", label: "Practice", description: "Learn with flashcards" },
   { href: "/game", label: "Game", description: "Test your memory" },
+  { href: "/heist", label: "The Heist", description: "Recover the stolen works" },
 ];
 
 export default function NavMenu() {

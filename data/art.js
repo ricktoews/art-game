@@ -572,6 +572,61 @@ const artwork = [
     sourceUrl: "https://commons.wikimedia.org/wiki/File%3ALeonardo_da_Vinci_-_Adorazione_dei_Magi_-_Google_Art_Project.jpg",
     license: "Public domain",
     isPublicDomain: true
+  },
+  {
+    src: "garden-at-sainte-adresse.jpeg",
+    name: "Garden at Sainte-Adresse",
+    artist: "Claude Monet",
+    date: "1867",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AGarden_at_Sainte-Adresse.JPG",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "monet-women-in-garden.jpeg",
+    name: "Monet - women-in-the-garden",
+    artist: "Claude Monet",
+    date: "before 1926",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AMonet_-_women-in-the-garden.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "monet-magpie.jpeg",
+    name: "Monet - The Magpie",
+    artist: "Claude Monet",
+    date: "1869",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AMonet_-_The_Magpie.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "la-grenouillere.jpeg",
+    name: "La Grenouillère",
+    artist: "Claude Monet",
+    date: "1869",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3AClaude_Monet_La_Grenouill%C3%A9re.jpg",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "regatta-at-sainte-adresse.jpeg",
+    name: "Regatta at Sainte-Adresse",
+    artist: "Claude Monet",
+    date: "1867",
+    location: "",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File%3ARegatta_at_Sainte-Adresse_MET_DT1401.jpg",
+    license: "CC0",
+    isPublicDomain: true
   }
 ];
 

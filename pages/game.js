@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Art from "@/data/art";
 import { getArtSelections } from "@/utils/helpers";
+import { getActiveCollectionArt } from "@/utils/collections";
 
 function shuffle(items) {
   const shuffled = [...items];
@@ -60,6 +61,7 @@ export default function Game() {
   const [score, setScore] = useState(0);
   const [ready, setReady] = useState(false);
   const [cropPosition, setCropPosition] = useState("50% 50%");
+  const [collectionName, setCollectionName] = useState("");
   const router = useRouter();
 
   const currentArt = round[index];
@@ -69,7 +71,9 @@ export default function Game() {
   );
 
   useEffect(() => {
-    const selected = getArtSelections().filter((item) => item.selected);
+    const result = getActiveCollectionArt(getArtSelections());
+    const selected = result.artworks;
+    setCollectionName(result.collection?.name || "My Collection");
     const shuffled = shuffle(selected);
     setRound(shuffled);
     setRoundSize(shuffled.length);
@@ -78,7 +82,9 @@ export default function Game() {
   }, []);
 
   const startNewRound = () => {
-    const selected = getArtSelections().filter((item) => item.selected);
+    const result = getActiveCollectionArt(getArtSelections());
+    const selected = result.artworks;
+    setCollectionName(result.collection?.name || "My Collection");
     const shuffled = shuffle(selected);
     setRound(shuffled);
     setRoundSize(shuffled.length);
@@ -117,7 +123,7 @@ export default function Game() {
             Choose some paintings first
           </h1>
           <p className="mt-3 text-slate-600">
-            Select paintings in the Gallery to create a game.
+            Add paintings to {collectionName || "this collection"} in the Gallery to create a game.
           </p>
           <button
             className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white"
@@ -164,6 +170,9 @@ export default function Game() {
   return (
     <Layout title="Game">
       <main className="w-full max-w-md px-4">
+        <div className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+          {collectionName}
+        </div>
         <div className="mb-4 flex justify-between text-sm text-slate-500">
           <span>
             Painting {index + 1} of {roundSize}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import { getArtSelections } from "@/utils/helpers";
+import { getActiveCollectionArt } from "@/utils/collections";
 
 function shuffle(items) {
   const shuffled = [...items];
@@ -20,10 +21,13 @@ export default function Practice() {
   const [queue, setQueue] = useState([]);
   const [revealed, setRevealed] = useState(false);
   const [ready, setReady] = useState(false);
+  const [collectionName, setCollectionName] = useState("");
   const router = useRouter();
 
   useEffect(() => {
-    const items = getArtSelections().filter((item) => item.selected);
+    const result = getActiveCollectionArt(getArtSelections());
+    const items = result.artworks;
+    setCollectionName(result.collection?.name || "My Collection");
     setSelectedArt(items);
     setQueue(shuffle(items));
     setReady(true);
@@ -60,7 +64,7 @@ export default function Practice() {
             Choose some paintings first
           </h1>
           <p className="mt-3 text-slate-600">
-            Select paintings in the Gallery to build a practice round.
+            Add paintings to {collectionName || "this collection"} in the Gallery to build a practice round.
           </p>
           <button
             className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white"
@@ -109,6 +113,9 @@ export default function Practice() {
   return (
     <Layout title="Practice">
       <main className="w-full max-w-md px-4">
+        <div className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+          {collectionName}
+        </div>
         <div className="mb-5 flex items-center justify-between text-sm text-slate-500">
           <span>{queue.length} remaining</span>
           <span>{selectedArt.length} in this round</span>
