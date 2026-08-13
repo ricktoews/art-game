@@ -7,6 +7,7 @@ const menuItems = [
   { href: "/practice", label: "Practice", description: "Learn with flashcards" },
   { href: "/game", label: "Game", description: "Test your memory" },
   { href: "/heist", label: "The Heist", description: "Recover the stolen works" },
+  { href: "/puzzle", label: "Forgery Puzzle", description: "Find and restore the fakes" },
 ];
 
 export default function NavMenu() {
