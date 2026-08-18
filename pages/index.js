@@ -2,14 +2,6 @@ import { useEffect, useState } from "react";
 import { GalleryItem } from "@/components/GalleryItem";
 import Layout from "@/components/Layout";
 import { saveArtSelections, getArtSelections, sortGallery } from "../utils/helpers";
-import {
-  applyCollection,
-  createCollection,
-  getActiveCollection,
-  getCollections,
-  setActiveCollection,
-  toggleArtworkInCollection,
-} from "../utils/collections";
 import Art from "@/data/art";
 
 /* Defaults, and functions to check for an empty selection pool and supply the defaults. */
@@ -55,10 +47,6 @@ export default function Gallery() {
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupItem, setPopupItem] = useState(null);
   const [galleryView, setGalleryView] = useState("grid");
-  const [collections, setCollections] = useState([]);
-  const [activeCollection, setActiveCollectionState] = useState(null);
-  const [creatingCollection, setCreatingCollection] = useState(false);
-  const [collectionName, setCollectionName] = useState("");
 
   useEffect(() => {
     let _artSelections = getArtSelections();
@@ -69,13 +57,7 @@ export default function Gallery() {
       saveArtSelections(_artSelections);
     }
 
-    const loadedCollections = getCollections(_artSelections);
-    const loadedActiveCollection = getActiveCollection(loadedCollections);
-    const artSelections = sortGallery(
-      applyCollection(_artSelections, loadedActiveCollection)
-    );
-    setCollections(loadedCollections);
-    setActiveCollectionState(loadedActiveCollection);
+    const artSelections = sortGallery(_artSelections);
     setArtSelections(artSelections);
   }, []);
 
@@ -84,35 +66,9 @@ export default function Gallery() {
     setToggleState(setting);
     setItemToggled(popupItem.name);
     saveArtSelections(ArtSelections);
-    const updatedCollections = toggleArtworkInCollection(
-      collections,
-      activeCollection.id,
-      popupItem.src
-    );
-    setCollections(updatedCollections);
     const item = ArtSelections.find((item) => item.name === popupItem.name);
     setPopupItem(item);
   }
-
-  const handleCollectionChange = (event) => {
-    const collection = collections.find((item) => item.id === event.target.value);
-    setActiveCollection(collection.id);
-    setActiveCollectionState(collection);
-    setArtSelections((art) => sortGallery(applyCollection(art, collection)));
-    setPopupOpen(false);
-  };
-
-  const handleCreateCollection = (event) => {
-    event.preventDefault();
-    const name = collectionName.trim();
-    if (!name) return;
-    const result = createCollection(collections, name);
-    setCollections(result.collections);
-    setActiveCollectionState(result.collection);
-    setArtSelections((art) => sortGallery(applyCollection(art, result.collection)));
-    setCollectionName("");
-    setCreatingCollection(false);
-  };
 
   const handleItemClick = (e) => {
     const el = e.currentTarget;
@@ -139,48 +95,7 @@ export default function Gallery() {
   ).map(([artist, artworks]) => ({ artist, artworks }));
 
   return (
-    <Layout title="Art Gallery" collectionName={activeCollection?.name} toggleItemSelect={toggleItemSelect} setPopupOpen={setPopupOpen} popupOpen={popupOpen} popupItem={popupItem}>
-      <section className="mb-7 w-full max-w-[420px] px-4">
-        <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500" htmlFor="collection">
-          Active collection
-        </label>
-        <div className="flex gap-2">
-          <select
-            className="min-w-0 flex-1 border border-slate-300 bg-white px-3 py-2.5 text-slate-800"
-            id="collection"
-            onChange={handleCollectionChange}
-            value={activeCollection?.id || ""}
-          >
-            {collections.map((collection) => (
-              <option key={collection.id} value={collection.id}>
-                {collection.name} ({collection.artworkSources.length})
-              </option>
-            ))}
-          </select>
-          <button
-            className="border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700"
-            onClick={() => setCreatingCollection((current) => !current)}
-            type="button"
-          >
-            New
-          </button>
-        </div>
-        {creatingCollection ? (
-          <form className="mt-3 flex gap-2" onSubmit={handleCreateCollection}>
-            <input
-              autoFocus
-              className="min-w-0 flex-1 border-b border-slate-400 bg-white px-2 py-2 outline-none focus:border-slate-800"
-              maxLength={40}
-              onChange={(event) => setCollectionName(event.target.value)}
-              placeholder="Collection name"
-              value={collectionName}
-            />
-            <button className="bg-slate-800 px-4 py-2 text-sm font-semibold text-white" type="submit">
-              Create
-            </button>
-          </form>
-        ) : null}
-      </section>
+    <Layout title="Art Gallery" toggleItemSelect={toggleItemSelect} setPopupOpen={setPopupOpen} popupOpen={popupOpen} popupItem={popupItem}>
       <div className="mb-8 flex rounded-full border border-slate-300 bg-white p-1 text-sm shadow-sm">
         <button
           className={`rounded-full px-4 py-2 transition ${galleryView === "grid" ? "bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}

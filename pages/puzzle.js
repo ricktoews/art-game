@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Art from "@/data/art";
 import { getArtSelections } from "@/utils/helpers";
-import { getActiveCollectionArt } from "@/utils/collections";
 
 const GRID_SIZE = 3;
 const TILE_COUNT = GRID_SIZE * GRID_SIZE;
@@ -60,8 +59,7 @@ function tileStyle(image, tileIndex) {
 
 export default function Puzzle() {
   const [ready, setReady] = useState(false);
-  const [collectionName, setCollectionName] = useState("");
-  const [collectionArt, setCollectionArt] = useState([]);
+  const [selectedArt, setSelectedArt] = useState([]);
   const [target, setTarget] = useState(null);
   const [decoy, setDecoy] = useState(null);
   const [phase, setPhase] = useState("preview");
@@ -90,10 +88,9 @@ export default function Puzzle() {
   };
 
   useEffect(() => {
-    const result = getActiveCollectionArt(getArtSelections());
-    setCollectionName(result.collection?.name || "My Collection");
-    setCollectionArt(result.artworks);
-    if (result.artworks.length) newRound(result.artworks);
+    const items = getArtSelections().filter((item) => item.selected);
+    setSelectedArt(items);
+    if (items.length) newRound(items);
     setReady(true);
   }, []);
 
@@ -138,7 +135,7 @@ export default function Puzzle() {
       <Layout title="Forgery Puzzle">
         <div className="mx-4 w-full max-w-md border border-slate-200 bg-white p-8 text-center shadow-sm">
           <h1 className="text-2xl font-semibold text-slate-900">Choose a painting first</h1>
-          <p className="mt-3 text-slate-600">Add at least one painting to {collectionName} to create a puzzle.</p>
+          <p className="mt-3 text-slate-600">Select at least one painting in the Gallery to create a puzzle.</p>
           <button className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => router.push("/")} type="button">Go to Gallery</button>
         </div>
       </Layout>
@@ -149,7 +146,6 @@ export default function Puzzle() {
     return (
       <Layout title="Forgery Puzzle">
         <main className="w-full max-w-md px-4 text-center">
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{collectionName}</div>
           <h1 className="mt-2 text-2xl font-semibold text-slate-900">Study the painting</h1>
           <p className="mt-2 text-sm text-slate-500">Two counterfeit pieces are about to be slipped into it.</p>
           <div className="mt-6 flex aspect-square items-center justify-center overflow-hidden bg-slate-100 shadow-lg">
@@ -175,7 +171,7 @@ export default function Puzzle() {
           <img alt={target.name} className="aspect-square w-full object-cover" src={target.src} />
           <div className="p-6">
             <div className="mb-5 text-slate-600">Puzzle solved in <strong className="text-slate-900">{moves}</strong> moves.</div>
-            <button className="w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => newRound(collectionArt)} type="button">Another puzzle</button>
+            <button className="w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => newRound(selectedArt)} type="button">Another puzzle</button>
             <button className="mt-3 w-full border border-slate-300 px-5 py-3 font-semibold text-slate-700" onClick={() => router.push("/")} type="button">Gallery</button>
           </div>
         </main>

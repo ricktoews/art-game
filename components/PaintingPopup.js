@@ -3,7 +3,6 @@ import { useEffect } from "react";
 export default function PaintingPopup({
   toggleItemSelect,
   active,
-  collectionName,
   setPopupOpen,
   popupItem,
 }) {
@@ -28,8 +27,8 @@ export default function PaintingPopup({
 
   const selected = !!popupItem.selected;
   const actionLabel = selected
-    ? `Remove from ${collectionName}`
-    : `Add to ${collectionName}`;
+    ? "Remove from Practice & Game"
+    : "Add to Practice & Game";
 
   const handleBackdropClick = (event) => {
     if (event.target === event.currentTarget) setPopupOpen(false);

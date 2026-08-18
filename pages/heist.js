@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Art from "@/data/art";
 import { getArtSelections } from "@/utils/helpers";
-import { getActiveCollectionArt } from "@/utils/collections";
 
 const STUDY_SECONDS = 12;
 const WALL_SIZE = 5;
@@ -22,8 +21,8 @@ function shuffle(items) {
   return shuffled;
 }
 
-function buildRound(collectionArt) {
-  const wall = shuffle(collectionArt).slice(0, WALL_SIZE);
+function buildRound(selectedArt) {
+  const wall = shuffle(selectedArt).slice(0, WALL_SIZE);
   const stolen = shuffle(wall).slice(0, STOLEN_COUNT);
   const stolenSources = new Set(stolen.map((item) => item.src));
   const distractors = shuffle(
@@ -34,8 +33,7 @@ function buildRound(collectionArt) {
 
 export default function Heist() {
   const [ready, setReady] = useState(false);
-  const [collectionName, setCollectionName] = useState("");
-  const [collectionArt, setCollectionArt] = useState([]);
+  const [selectedArt, setSelectedArt] = useState([]);
   const [round, setRound] = useState(null);
   const [phase, setPhase] = useState("study");
   const [seconds, setSeconds] = useState(STUDY_SECONDS);
@@ -47,10 +45,9 @@ export default function Heist() {
   const router = useRouter();
 
   useEffect(() => {
-    const result = getActiveCollectionArt(getArtSelections());
-    setCollectionName(result.collection?.name || "My Collection");
-    setCollectionArt(result.artworks);
-    if (result.artworks.length >= WALL_SIZE) setRound(buildRound(result.artworks));
+    const items = getArtSelections().filter((item) => item.selected);
+    setSelectedArt(items);
+    if (items.length >= WALL_SIZE) setRound(buildRound(items));
     setReady(true);
   }, []);
 
@@ -125,7 +122,7 @@ export default function Heist() {
   };
 
   const restart = () => {
-    setRound(buildRound(collectionArt));
+    setRound(buildRound(selectedArt));
     setPhase("study");
     setSeconds(STUDY_SECONDS);
     setRecovered([]);
@@ -136,7 +133,7 @@ export default function Heist() {
 
   if (!ready) return null;
 
-  if (collectionArt.length < WALL_SIZE) {
+  if (selectedArt.length < WALL_SIZE) {
     return (
       <Layout title="The Heist">
         <div className="mx-4 w-full max-w-md border border-slate-200 bg-white p-8 text-center shadow-sm">
@@ -144,7 +141,7 @@ export default function Heist() {
             The museum needs five works
           </h1>
           <p className="mt-3 text-slate-600">
-            Add at least five paintings to {collectionName} before starting the heist.
+            Select at least five paintings in the Gallery before starting the heist.
           </p>
           <button className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => router.push("/")} type="button">
             Go to Gallery
@@ -176,7 +173,6 @@ export default function Heist() {
                 Museum secure
               </div>
               <h1 className="mt-2 text-2xl font-semibold">Collection restored</h1>
-              <p className="mt-1 text-sm text-emerald-50/80">{collectionName}</p>
             </div>
 
             <div className="p-5">
@@ -361,7 +357,6 @@ export default function Heist() {
     <Layout title="The Heist">
       <main className={`w-full max-w-[680px] px-4 transition ${theftActive ? "bg-rose-950/5" : ""}`}>
         <div className="mb-5 text-center">
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{collectionName}</div>
           <h1 className="mt-2 text-xl font-semibold text-slate-900">{theftActive ? "The gallery alarm is sounding…" : "Study the museum wall"}</h1>
           <p className="mt-1 text-sm text-slate-500">{theftActive ? "Three works have vanished." : `The thief arrives in ${seconds} seconds.`}</p>
         </div>
