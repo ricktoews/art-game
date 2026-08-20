@@ -3,6 +3,7 @@ import { GalleryItem } from "@/components/GalleryItem";
 import Layout from "@/components/Layout";
 import { saveArtSelections, getArtSelections, sortGallery } from "../utils/helpers";
 import Art from "@/data/art";
+import { getArtMovement } from "@/data/artMovements";
 
 /* Defaults, and functions to check for an empty selection pool and supply the defaults. */
 const defaultArt = [
@@ -93,6 +94,16 @@ export default function Gallery() {
       return groups;
     }, new Map())
   ).map(([artist, artworks]) => ({ artist, artworks }));
+  const movementGroups = Array.from(
+    ArtSelections.reduce((groups, item) => {
+      const movement = getArtMovement(item);
+      if (!groups.has(movement)) groups.set(movement, []);
+      groups.get(movement).push(item);
+      return groups;
+    }, new Map())
+  )
+    .map(([movement, artworks]) => ({ movement, artworks }))
+    .sort((a, b) => a.movement.localeCompare(b.movement));
 
   return (
     <Layout title="Art Gallery" toggleItemSelect={toggleItemSelect} setPopupOpen={setPopupOpen} popupOpen={popupOpen} popupItem={popupItem}>
@@ -110,6 +121,13 @@ export default function Gallery() {
           type="button"
         >
           By artist
+        </button>
+        <button
+          className={`rounded-full px-4 py-2 transition ${galleryView === "movement" ? "bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
+          onClick={() => setGalleryView("movement")}
+          type="button"
+        >
+          By movement
         </button>
       </div>
 
@@ -146,7 +164,7 @@ export default function Gallery() {
             </div>
           </section>
         </>
-      ) : (
+      ) : galleryView === "artist" ? (
         <section className="w-full max-w-[640px] px-4">
           <h2 className="mb-7 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
             Paintings by Artist
@@ -156,6 +174,34 @@ export default function Gallery() {
               <section key={group.artist}>
                 <div className="mb-4 flex items-baseline justify-between border-b border-slate-200 pb-2">
                   <h3 className="font-semibold text-slate-800">{group.artist}</h3>
+                  <span className="text-xs text-slate-400">
+                    {group.artworks.length} {group.artworks.length === 1 ? "work" : "works"}
+                  </span>
+                </div>
+                <div className="flex flex-wrap justify-center gap-x-8 gap-y-5">
+                  {group.artworks.map((item, key) => (
+                    <GalleryItem
+                      handleItemClick={handleItemClick}
+                      item={item}
+                      key={item.src}
+                      itemkey={key}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section className="w-full max-w-[640px] px-4">
+          <h2 className="mb-7 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
+            Paintings by Movement
+          </h2>
+          <div className="space-y-10">
+            {movementGroups.map((group) => (
+              <section key={group.movement}>
+                <div className="mb-4 flex items-baseline justify-between border-b border-slate-200 pb-2">
+                  <h3 className="font-semibold text-slate-800">{group.movement}</h3>
                   <span className="text-xs text-slate-400">
                     {group.artworks.length} {group.artworks.length === 1 ? "work" : "works"}
                   </span>

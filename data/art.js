@@ -746,11 +746,10 @@ const artwork = [
     src: "art/scream.jpeg",
     name: "The Scream",
     artist: "Edvard Munch",
-    date: "1895",
-    location: "Art Institute of Chicago",
-    museumId: 17229,
-    source: "Art Institute of Chicago",
-    sourceUrl: "https://www.artic.edu/artworks/17229",
+    date: "1893",
+    location: "National Museum, Oslo",
+    source: "Manual import",
+    sourceUrl: "https://www.nasjonalmuseet.no/en/collection/object/NG.M.00939",
     license: "Public domain",
     isPublicDomain: true
   },
@@ -960,11 +959,10 @@ const artwork = [
     src: "art/sick-child.jpeg",
     name: "The Sick Child",
     artist: "Edvard Munch",
-    date: "1894",
-    location: "Art Institute of Chicago",
-    museumId: 17343,
-    source: "Art Institute of Chicago",
-    sourceUrl: "https://www.artic.edu/artworks/17343",
+    date: "1885–1886",
+    location: "National Museum, Oslo",
+    source: "Manual import",
+    sourceUrl: "https://www.nasjonalmuseet.no/en/collection/object/NG.M.00839",
     license: "Public domain",
     isPublicDomain: true
   },
@@ -1060,10 +1058,10 @@ const artwork = [
     src: "art/black-square.jpeg",
     name: "Black Square",
     artist: "Kazimir Malevich",
-    date: "",
-    location: "",
+    date: "1915",
+    location: "State Tretyakov Gallery, Moscow",
     source: "Wikimedia Commons",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File%3ABlack_square.jpg",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Kazimir_Malevich,_1915,_Black_Suprematic_Square,_oil_on_linen_canvas,_79.5_x_79.5_cm,_Tretyakov_Gallery,_Moscow.jpg",
     license: "Public domain",
     isPublicDomain: true
   },
@@ -1099,6 +1097,28 @@ const artwork = [
     sourceUrl: "https://search.smb.museum/object/obj-967648",
     license: "Public domain",
     isPublicDomain: true
+  },
+  {
+    src: "art/the-kiss-edvard-munch.jpg",
+    name: "The Kiss",
+    artist: "Edvard Munch",
+    date: "1897",
+    location: "Munch Museum, Oslo",
+    source: "Manual import",
+    sourceUrl: "https://www.munch.no/en/object/MM.M.00059",
+    license: "Public domain",
+    isPublicDomain: true
+  },
+  {
+    src: "art/guernica.jpg",
+    name: "Guernica",
+    artist: "Pablo Picasso",
+    date: "1937",
+    location: "Museo Reina Sofía, Madrid",
+    source: "User-provided image",
+    sourceUrl: "https://guernica.museoreinasofia.es/en/gigapixel/",
+    license: "Copyrighted",
+    isPublicDomain: false
   }
 ];
 

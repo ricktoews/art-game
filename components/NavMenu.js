@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 
 const menuItems = [
   { href: "/", label: "Gallery", description: "Choose your paintings" },
+  { href: "/artists", label: "Artists", description: "Meet the artists" },
   { href: "/practice", label: "Practice", description: "Learn with flashcards" },
   { href: "/game", label: "Game", description: "Test your memory" },
   { href: "/heist", label: "The Heist", description: "Recover the stolen works" },
   { href: "/puzzle", label: "Forgery Puzzle", description: "Find and restore the fakes" },
-  { href: "/requests", label: "Requested", description: "Review missing paintings" },
 ];
 
 export default function NavMenu() {
@@ -74,7 +74,7 @@ export default function NavMenu() {
           </div>
           <div className="p-2">
             {menuItems.map((item) => {
-              const active = router.pathname === item.href;
+              const active = item.href === "/" ? router.pathname === "/" : router.pathname.startsWith(item.href);
               return (
                 <Link
                   aria-current={active ? "page" : undefined}

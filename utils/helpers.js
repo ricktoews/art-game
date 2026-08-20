@@ -48,6 +48,16 @@ function updateArt(savedArt, loadedArt) {
       currentArt.name = item.name;
       currentArt.artist = item.artist;
       currentArt.date = item.date;
+      currentArt.location = item.location;
+      currentArt.source = item.source;
+      currentArt.sourceUrl = item.sourceUrl;
+      currentArt.license = item.license;
+      currentArt.isPublicDomain = item.isPublicDomain;
+      if (item.museumId) {
+        currentArt.museumId = item.museumId;
+      } else {
+        delete currentArt.museumId;
+      }
     }
   });
 
