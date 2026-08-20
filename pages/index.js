@@ -29,7 +29,7 @@ function addDefaultSelections(art, defaultArt) {
 
 
 function toggleArt(ArtSelections, identifier) {
-  const item = ArtSelections.find((item) => item.name === identifier);
+  const item = ArtSelections.find((item) => item.src === identifier);
 
   if (item.selected) {
     delete item.selected;
@@ -62,11 +62,11 @@ export default function Gallery() {
   }, []);
 
   const toggleItemSelect = () => {
-    const setting = toggleArt(ArtSelections, popupItem.name);
+    const setting = toggleArt(ArtSelections, popupItem.src);
     setToggleState(setting);
-    setItemToggled(popupItem.name);
+    setItemToggled(popupItem.src);
     saveArtSelections(ArtSelections);
-    const item = ArtSelections.find((item) => item.name === popupItem.name);
+    const item = ArtSelections.find((item) => item.src === popupItem.src);
     setPopupItem(item);
   }
 
@@ -76,7 +76,7 @@ export default function Gallery() {
 
     //    const setting = toggleArt(ArtSelections, identifier);
     //    saveArtSelections(ArtSelections);
-    const item = ArtSelections.find((item) => item.name === identifier);
+    const item = ArtSelections.find((item) => item.src === identifier);
     setPopupOpen(true);
     setPopupItem(item);
   };
@@ -124,7 +124,7 @@ export default function Gallery() {
                 <GalleryItem
                   handleItemClick={handleItemClick}
                   item={item}
-                  key={item.name}
+                  key={item.src}
                   itemkey={key}
                 />
               ))}
@@ -139,7 +139,7 @@ export default function Gallery() {
                 <GalleryItem
                   handleItemClick={handleItemClick}
                   item={item}
-                  key={item.name}
+                  key={item.src}
                   itemkey={key}
                 />
               ))}
@@ -165,7 +165,7 @@ export default function Gallery() {
                     <GalleryItem
                       handleItemClick={handleItemClick}
                       item={item}
-                      key={item.name}
+                      key={item.src}
                       itemkey={key}
                     />
                   ))}

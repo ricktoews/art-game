@@ -35,11 +35,16 @@ function updateArt(savedArt, loadedArt) {
 
   // Update saved art; note new art pieces to be added.
   loadedArt.forEach((item) => {
-    let src = item.src;
-    let currentArt = savedArt.find((savedItem) => savedItem.src === src);
+    const filename = item.src.split("/").pop();
+    let currentArt = savedArt.find(
+      (savedItem) =>
+        savedItem.src === item.src ||
+        savedItem.src?.split("/").pop() === filename
+    );
     if (!currentArt) {
       artToAdd.push(item);
     } else {
+      currentArt.src = item.src;
       currentArt.name = item.name;
       currentArt.artist = item.artist;
       currentArt.date = item.date;
@@ -48,8 +53,12 @@ function updateArt(savedArt, loadedArt) {
 
   // Delete art no longer in collection.
   savedArt.forEach((item) => {
-    let src = item.src;
-    if (!loadedArt.find((loadedItem) => loadedItem.src === src)) {
+    const filename = item.src?.split("/").pop();
+    if (
+      !loadedArt.find(
+        (loadedItem) => loadedItem.src?.split("/").pop() === filename
+      )
+    ) {
       item.delete = true;
     }
   });
