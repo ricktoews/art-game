@@ -7,7 +7,7 @@ export function GalleryItem(props) {
     maxHeight: `${FRAME_HEIGHT}px`,
     maxWidth: `${FRAME_WIDTH}px`,
   };
-  const identifier = item.name;
+  const identifier = item.src;
   if (item.selected) {
     thumbStyle.border = '1px solid white';
   } else {
