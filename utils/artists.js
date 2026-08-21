@@ -14,6 +14,10 @@ export function getArtistProfile(slug) {
   return getArtistProfiles().find((profile) => profile.slug === slug);
 }
 
+export function getArtistProfileByName(name) {
+  return getArtistProfiles().find((profile) => profile.name === name);
+}
+
 export function getLifeDates(profile) {
   if (!profile.born && !profile.died) return "Dates unknown";
   return `${profile.born || "?"}–${profile.died || "present"}`;

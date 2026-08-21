@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import { getArtSelections } from "@/utils/helpers";
+import { recordFamiliarity } from "@/utils/familiarity";
 
 function shuffle(items) {
   const shuffled = [...items];
@@ -37,6 +38,7 @@ export default function Practice() {
   };
 
   const handleAgain = () => {
+    recordFamiliarity(currentArt.src, "again");
     const [, ...remaining] = queue;
     const insertionIndex = Math.min(2, remaining.length);
     const nextQueue = [...remaining];
@@ -46,6 +48,7 @@ export default function Practice() {
   };
 
   const handleGotIt = () => {
+    recordFamiliarity(currentArt.src, "gotIt");
     setQueue((currentQueue) => currentQueue.slice(1));
     setRevealed(false);
   };
@@ -64,7 +67,7 @@ export default function Practice() {
           </p>
           <button
             className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/gallery")}
             type="button"
           >
             Go to Gallery

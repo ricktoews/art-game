@@ -1,227 +1,77 @@
 import { useEffect, useState } from "react";
-import { GalleryItem } from "@/components/GalleryItem";
+import Link from "next/link";
 import Layout from "@/components/Layout";
-import { saveArtSelections, getArtSelections, sortGallery } from "../utils/helpers";
 import Art from "@/data/art";
-import { getArtMovement } from "@/data/artMovements";
+import { getArtSelections, saveArtSelections } from "@/utils/helpers";
+import { getDiscoverArt, recordFamiliarity, removeFromDiscover } from "@/utils/familiarity";
 
-/* Defaults, and functions to check for an empty selection pool and supply the defaults. */
-const defaultArt = [
-  'The Starry Night',
-  'American Gothic',
-  'Napoleon Crossing The Alps',
-  'The Last Supper',
-  'The Night Watch'
-];
-
-function isSelectionPoolEmpty(art) {
-  const selections = art.filter(item => item.selected);
-  const result = selections.length === 0;
-  return result;
-}
-
-function addDefaultSelections(art, defaultArt) {
-  for (let artName of defaultArt) {
-    const defaultItem = art.find(item => item.name.toLowerCase() === artName.toLowerCase());
-    defaultItem.selected = true;
-  }
-}
-/* End setting defaults if selection pool empty. */
-
-
-function toggleArt(ArtSelections, identifier) {
-  const item = ArtSelections.find((item) => item.src === identifier);
-
-  if (item.selected) {
-    delete item.selected;
-    return false;
-  } else {
-    item.selected = true;
-    return true;
-  }
-}
-
-export default function Gallery() {
-  const [itemToggled, setItemToggled] = useState("");
-  const [toggleState, setToggleState] = useState(null);
-  const [ArtSelections, setArtSelections] = useState(Art);
+export default function Discover() {
+  const [artSelections, setArtSelections] = useState([]);
+  const [discoveries, setDiscoveries] = useState([]);
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupItem, setPopupItem] = useState(null);
-  const [galleryView, setGalleryView] = useState("grid");
 
   useEffect(() => {
-    let _artSelections = getArtSelections();
-
-    // Set default paintings, to make sure we don't start with an empty selection pool.
-    if (isSelectionPoolEmpty(_artSelections)) {
-      addDefaultSelections(_artSelections, defaultArt);
-      saveArtSelections(_artSelections);
-    }
-
-    const artSelections = sortGallery(_artSelections);
-    setArtSelections(artSelections);
+    const selections = getArtSelections();
+    const recommendations = getDiscoverArt(selections);
+    setArtSelections(selections);
+    setDiscoveries(recommendations);
+    recommendations.forEach((item) => recordFamiliarity(item.src, "shown"));
   }, []);
 
-  const toggleItemSelect = () => {
-    const setting = toggleArt(ArtSelections, popupItem.src);
-    setToggleState(setting);
-    setItemToggled(popupItem.src);
-    saveArtSelections(ArtSelections);
-    const item = ArtSelections.find((item) => item.src === popupItem.src);
+  const openPainting = (item) => {
+    recordFamiliarity(item.src, "opened");
     setPopupItem(item);
-  }
-
-  const handleItemClick = (e) => {
-    const el = e.currentTarget;
-    const { identifier } = el.dataset;
-
-    //    const setting = toggleArt(ArtSelections, identifier);
-    //    saveArtSelections(ArtSelections);
-    const item = ArtSelections.find((item) => item.src === identifier);
     setPopupOpen(true);
-    setPopupItem(item);
   };
 
-  if (!ArtSelections) return null;
+  const toggleItemSelect = () => {
+    const next = artSelections.map((item) =>
+      item.src === popupItem.src ? { ...item, selected: !item.selected } : item
+    );
+    saveArtSelections(next);
+    setArtSelections(next);
+    const updated = next.find((item) => item.src === popupItem.src);
+    setPopupItem(updated);
+    setDiscoveries((current) => current.map((item) => item.src === updated.src ? updated : item));
+  };
 
-  const selectedArt = ArtSelections.filter((item) => item.selected);
-  const unselectedArt = ArtSelections.filter((item) => !item.selected);
-  const artistGroups = Array.from(
-    ArtSelections.reduce((groups, item) => {
-      const artist = item.artist || "Unknown artist";
-      if (!groups.has(artist)) groups.set(artist, []);
-      groups.get(artist).push(item);
-      return groups;
-    }, new Map())
-  ).map(([artist, artworks]) => ({ artist, artworks }));
-  const movementGroups = Array.from(
-    ArtSelections.reduce((groups, item) => {
-      const movement = getArtMovement(item);
-      if (!groups.has(movement)) groups.set(movement, []);
-      groups.get(movement).push(item);
-      return groups;
-    }, new Map())
-  )
-    .map(([movement, artworks]) => ({ movement, artworks }))
-    .sort((a, b) => a.movement.localeCompare(b.movement));
+  const dismiss = (src) => {
+    removeFromDiscover(src);
+    const next = getDiscoverArt(artSelections);
+    setDiscoveries(next);
+    const replacement = next.find((item) => !discoveries.some((current) => current.src === item.src));
+    if (replacement) recordFamiliarity(replacement.src, "shown");
+  };
 
   return (
-    <Layout title="Art Gallery" toggleItemSelect={toggleItemSelect} setPopupOpen={setPopupOpen} popupOpen={popupOpen} popupItem={popupItem}>
-      <div className="mb-8 flex rounded-full border border-slate-300 bg-white p-1 text-sm shadow-sm">
-        <button
-          className={`rounded-full px-4 py-2 transition ${galleryView === "grid" ? "bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
-          onClick={() => setGalleryView("grid")}
-          type="button"
-        >
-          Gallery
-        </button>
-        <button
-          className={`rounded-full px-4 py-2 transition ${galleryView === "artist" ? "bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
-          onClick={() => setGalleryView("artist")}
-          type="button"
-        >
-          By artist
-        </button>
-        <button
-          className={`rounded-full px-4 py-2 transition ${galleryView === "movement" ? "bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
-          onClick={() => setGalleryView("movement")}
-          type="button"
-        >
-          By movement
-        </button>
-      </div>
+    <Layout title="Discover" popupOpen={popupOpen} popupItem={popupItem} setPopupOpen={setPopupOpen} toggleItemSelect={toggleItemSelect}>
+      <main className="w-full max-w-5xl px-5">
+        <div className="mb-10 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Selected for you</p>
+          <h1 className="mt-2 text-3xl font-semibold text-slate-900">Five paintings to discover</h1>
+          <p className="mx-auto mt-3 max-w-xl text-slate-600">A changing mix of familiar favorites and works you may not know yet.</p>
+        </div>
 
-      {galleryView === "grid" ? (
-        <>
-          <section className="w-full max-w-[640px]">
-            <h2 className="mb-6 px-4 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
-              Selected for Practice &amp; Game
-            </h2>
-            <div className="flex w-full flex-wrap justify-center gap-x-8 gap-y-5 px-4">
-              {selectedArt.map((item, key) => (
-                <GalleryItem
-                  handleItemClick={handleItemClick}
-                  item={item}
-                  key={item.src}
-                  itemkey={key}
-                />
-              ))}
-            </div>
-          </section>
-          <section className="mt-12 w-full max-w-[640px] border-t border-slate-300 pt-8">
-            <h2 className="mb-6 px-4 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
-              More Paintings
-            </h2>
-            <div className="flex w-full flex-wrap justify-center gap-x-8 gap-y-5 px-4">
-              {unselectedArt.map((item, key) => (
-                <GalleryItem
-                  handleItemClick={handleItemClick}
-                  item={item}
-                  key={item.src}
-                  itemkey={key}
-                />
-              ))}
-            </div>
-          </section>
-        </>
-      ) : galleryView === "artist" ? (
-        <section className="w-full max-w-[640px] px-4">
-          <h2 className="mb-7 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
-            Paintings by Artist
-          </h2>
-          <div className="space-y-10">
-            {artistGroups.map((group) => (
-              <section key={group.artist}>
-                <div className="mb-4 flex items-baseline justify-between border-b border-slate-200 pb-2">
-                  <h3 className="font-semibold text-slate-800">{group.artist}</h3>
-                  <span className="text-xs text-slate-400">
-                    {group.artworks.length} {group.artworks.length === 1 ? "work" : "works"}
-                  </span>
-                </div>
-                <div className="flex flex-wrap justify-center gap-x-8 gap-y-5">
-                  {group.artworks.map((item, key) => (
-                    <GalleryItem
-                      handleItemClick={handleItemClick}
-                      item={item}
-                      key={item.src}
-                      itemkey={key}
-                    />
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </section>
-      ) : (
-        <section className="w-full max-w-[640px] px-4">
-          <h2 className="mb-7 text-center text-sm font-semibold uppercase tracking-[0.16em] text-slate-600">
-            Paintings by Movement
-          </h2>
-          <div className="space-y-10">
-            {movementGroups.map((group) => (
-              <section key={group.movement}>
-                <div className="mb-4 flex items-baseline justify-between border-b border-slate-200 pb-2">
-                  <h3 className="font-semibold text-slate-800">{group.movement}</h3>
-                  <span className="text-xs text-slate-400">
-                    {group.artworks.length} {group.artworks.length === 1 ? "work" : "works"}
-                  </span>
-                </div>
-                <div className="flex flex-wrap justify-center gap-x-8 gap-y-5">
-                  {group.artworks.map((item, key) => (
-                    <GalleryItem
-                      handleItemClick={handleItemClick}
-                      item={item}
-                      key={item.src}
-                      itemkey={key}
-                    />
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </section>
-      )}
+        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          {discoveries.map((item) => (
+            <article className="flex flex-col border border-slate-200 bg-white p-3 shadow-sm" key={item.src}>
+              <button className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-slate-100 p-2" onClick={() => openPainting(item)} type="button">
+                <img alt={item.name} className="max-h-full max-w-full object-contain shadow" src={item.src} />
+              </button>
+              <div className="flex flex-1 flex-col px-1 pb-1 pt-4">
+                <h2 className="font-semibold leading-snug text-slate-900">{item.name}</h2>
+                <p className="mt-1 text-sm text-slate-500">{item.artist}{item.date ? ` · ${item.date}` : ""}</p>
+                <button className="mt-4 self-start text-xs font-medium text-slate-400 underline decoration-slate-300 underline-offset-4 hover:text-slate-700" onClick={() => dismiss(item.src)} type="button">Not right now</button>
+              </div>
+            </article>
+          ))}
+        </div>
 
+        <div className="mt-12 border-t border-slate-200 pt-7 text-center">
+          <Link className="inline-block bg-slate-800 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-700" href="/gallery">Browse the full gallery</Link>
+        </div>
+      </main>
     </Layout>
   );
 }

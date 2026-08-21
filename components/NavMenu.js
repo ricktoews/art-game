@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 const menuItems = [
-  { href: "/", label: "Gallery", description: "Choose your paintings" },
+  { href: "/", label: "Discover", description: "Your daily selection" },
+  { href: "/gallery", label: "Gallery", description: "Choose your paintings" },
   { href: "/artists", label: "Artists", description: "Meet the artists" },
   { href: "/practice", label: "Practice", description: "Learn with flashcards" },
   { href: "/game", label: "Game", description: "Test your memory" },

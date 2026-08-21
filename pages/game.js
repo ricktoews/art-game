@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Art from "@/data/art";
 import { getArtSelections } from "@/utils/helpers";
+import { recordFamiliarity } from "@/utils/familiarity";
 
 function shuffle(items) {
   const shuffled = [...items];
@@ -93,6 +94,7 @@ export default function Game() {
     if (correct || wrongAnswers.includes(choice.name)) return;
 
     if (choice.name === currentArt.name) {
+      recordFamiliarity(currentArt.src, wrongAnswers.length === 0 ? "correct" : "incorrect");
       setCorrect(true);
       if (wrongAnswers.length === 0) setScore((currentScore) => currentScore + 1);
     } else {
@@ -121,7 +123,7 @@ export default function Game() {
           </p>
           <button
             className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/gallery")}
             type="button"
           >
             Go to Gallery

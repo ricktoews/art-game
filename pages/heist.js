@@ -143,7 +143,7 @@ export default function Heist() {
           <p className="mt-3 text-slate-600">
             Select at least five paintings in the Gallery before starting the heist.
           </p>
-          <button className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => router.push("/")} type="button">
+          <button className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => router.push("/gallery")} type="button">
             Go to Gallery
           </button>
         </div>
@@ -212,7 +212,7 @@ export default function Heist() {
                 Another heist
               </button>
               <div className="mt-3 grid grid-cols-2 gap-3">
-                <button className="border border-slate-300 px-3 py-3 text-sm font-semibold text-slate-700" onClick={() => router.push("/")} type="button">
+                <button className="border border-slate-300 px-3 py-3 text-sm font-semibold text-slate-700" onClick={() => router.push("/gallery")} type="button">
                   Gallery
                 </button>
                 <button className="border border-slate-300 px-3 py-3 text-sm font-semibold text-slate-700" onClick={() => router.push("/practice")} type="button">

@@ -136,7 +136,7 @@ export default function Puzzle() {
         <div className="mx-4 w-full max-w-md border border-slate-200 bg-white p-8 text-center shadow-sm">
           <h1 className="text-2xl font-semibold text-slate-900">Choose a painting first</h1>
           <p className="mt-3 text-slate-600">Select at least one painting in the Gallery to create a puzzle.</p>
-          <button className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => router.push("/")} type="button">Go to Gallery</button>
+          <button className="mt-6 w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => router.push("/gallery")} type="button">Go to Gallery</button>
         </div>
       </Layout>
     );
@@ -172,7 +172,7 @@ export default function Puzzle() {
           <div className="p-6">
             <div className="mb-5 text-slate-600">Puzzle solved in <strong className="text-slate-900">{moves}</strong> moves.</div>
             <button className="w-full bg-slate-800 px-5 py-3 font-semibold text-white" onClick={() => newRound(selectedArt)} type="button">Another puzzle</button>
-            <button className="mt-3 w-full border border-slate-300 px-5 py-3 font-semibold text-slate-700" onClick={() => router.push("/")} type="button">Gallery</button>
+            <button className="mt-3 w-full border border-slate-300 px-5 py-3 font-semibold text-slate-700" onClick={() => router.push("/gallery")} type="button">Gallery</button>
           </div>
         </main>
       </Layout>

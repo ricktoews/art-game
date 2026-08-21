@@ -1,4 +1,7 @@
 import { useEffect } from "react";
+import Link from "next/link";
+import { getArtMovement } from "@/data/artMovements";
+import { getArtistProfileByName, getLifeDates, getPortraitSrc } from "@/utils/artists";
 
 export default function PaintingPopup({
   toggleItemSelect,
@@ -26,6 +29,13 @@ export default function PaintingPopup({
   if (!active || !popupItem?.src) return null;
 
   const selected = !!popupItem.selected;
+  const artist = getArtistProfileByName(popupItem.artist);
+  const movement = getArtMovement(popupItem);
+  const biography = artist?.biography
+    ?.split("\n")
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("\n\n");
   const actionLabel = selected
     ? "Remove from Practice & Game"
     : "Add to Practice & Game";
@@ -53,12 +63,7 @@ export default function PaintingPopup({
         </button>
 
         <div className="min-h-0 flex-1 overflow-y-auto">
-          <button
-            aria-label={`${actionLabel}: ${popupItem.name}`}
-            className="relative flex w-full cursor-pointer items-center justify-center bg-slate-100 p-6 sm:p-8"
-            onClick={toggleItemSelect}
-            type="button"
-          >
+          <div className="relative flex w-full items-center justify-center bg-slate-100 p-6 sm:p-8">
             <img
               alt={popupItem.name}
               className={`max-h-[50vh] max-w-full object-contain shadow-md transition ${
@@ -72,7 +77,7 @@ export default function PaintingPopup({
                 <span className="sr-only">Selected</span>
               </span>
             ) : null}
-          </button>
+          </div>
 
           <div className="p-6 sm:p-8">
             <div
@@ -89,6 +94,54 @@ export default function PaintingPopup({
               {popupItem.artist}
               {popupItem.date ? ` · ${popupItem.date}` : ""}
             </p>
+            <dl className="mt-5 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-t border-slate-200 pt-5 text-sm">
+              <dt className="font-medium text-slate-500">Movement</dt>
+              <dd className="text-slate-800">{movement}</dd>
+              {popupItem.location ? (
+                <>
+                  <dt className="font-medium text-slate-500">Collection</dt>
+                  <dd className="text-slate-800">{popupItem.location}</dd>
+                </>
+              ) : null}
+            </dl>
+
+            {artist ? (
+              <section className="mt-7 border-t border-slate-200 pt-6">
+                <div className="flex items-center gap-4">
+                  {artist.portrait ? (
+                    <img
+                      alt={`Portrait of ${artist.name}`}
+                      className="h-16 w-16 shrink-0 rounded-full object-cover object-top"
+                      src={getPortraitSrc(artist)}
+                    />
+                  ) : (
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-slate-100 font-serif text-2xl text-slate-400">
+                      {artist.name.charAt(0)}
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">About the artist</div>
+                    <h3 className="mt-1 font-semibold text-slate-900">{artist.name}</h3>
+                    <p className="text-sm text-slate-500">{getLifeDates(artist)}</p>
+                  </div>
+                </div>
+                {biography ? (
+                  <p className="mt-4 whitespace-pre-line text-sm leading-6 text-slate-600">{biography}</p>
+                ) : null}
+                <Link
+                  className="mt-4 inline-block text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+                  href={`/artists/${artist.slug}`}
+                >
+                  Get to know {artist.name} →
+                </Link>
+              </section>
+            ) : null}
+
+            {popupItem.sourceUrl ? (
+              <a className="mt-6 inline-block text-xs text-slate-400 underline hover:text-slate-700" href={popupItem.sourceUrl} rel="noreferrer" target="_blank">
+                Artwork source
+              </a>
+            ) : null}
           </div>
         </div>
 
