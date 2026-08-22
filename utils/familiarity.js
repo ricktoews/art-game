@@ -1,6 +1,5 @@
 const FAMILIARITY_KEY = "art-game-familiarity-v1";
 const DISCOVER_KEY = "art-game-discover-v1";
-const DISMISSAL_COOLDOWN = 30 * 24 * 60 * 60 * 1000;
 
 function read(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -26,17 +25,6 @@ export function recordFamiliarity(src, event) {
   records[src] = {
     ...current,
     [event]: (current[event] || 0) + 1,
-    lastInteraction: Date.now(),
-  };
-  write(FAMILIARITY_KEY, records);
-}
-
-export function dismissForNow(src) {
-  const records = getFamiliarity();
-  records[src] = {
-    ...(records[src] || {}),
-    dismissals: (records[src]?.dismissals || 0) + 1,
-    dismissedUntil: Date.now() + DISMISSAL_COOLDOWN,
     lastInteraction: Date.now(),
   };
   write(FAMILIARITY_KEY, records);
@@ -82,13 +70,12 @@ function chooseVaried(candidates, count, records) {
 export function getDiscoverArt(art, count = 5) {
   const records = getFamiliarity();
   const saved = read(DISCOVER_KEY, []);
-  const eligible = art.filter((item) => (records[item.src]?.dismissedUntil || 0) <= Date.now());
   const current = saved
-    .map((src) => eligible.find((item) => item.src === src))
+    .map((src) => art.find((item) => item.src === src))
     .filter(Boolean)
     .slice(0, count);
   const additions = chooseVaried(
-    eligible.filter((item) => !current.some((chosen) => chosen.src === item.src)),
+    art.filter((item) => !current.some((chosen) => chosen.src === item.src)),
     count - current.length,
     records
   );
@@ -97,8 +84,13 @@ export function getDiscoverArt(art, count = 5) {
   return result;
 }
 
-export function removeFromDiscover(src) {
-  const saved = read(DISCOVER_KEY, []).filter((itemSrc) => itemSrc !== src);
-  write(DISCOVER_KEY, saved);
-  dismissForNow(src);
+export function getDiscoverAlternative(art, excludedSrcs = []) {
+  const records = getFamiliarity();
+  const excluded = new Set(excludedSrcs);
+  return chooseVaried(art.filter((item) => !excluded.has(item.src)), 1, records)[0] || null;
+}
+
+export function replaceDiscoverArt(currentSrc, replacementSrc) {
+  const saved = read(DISCOVER_KEY, []);
+  write(DISCOVER_KEY, saved.map((src) => src === currentSrc ? replacementSrc : src));
 }
