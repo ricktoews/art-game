@@ -48,25 +48,28 @@ export default function PaintingPopup({
     <div
       aria-label={`${popupItem.name} details`}
       aria-modal="true"
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-stretch justify-center bg-slate-950/70 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={handleBackdropClick}
       role="dialog"
     >
-      <div className="relative flex max-h-[calc(100vh-2rem)] w-full max-w-lg flex-col overflow-hidden rounded-sm bg-white text-slate-900 shadow-2xl">
-        <button
-          aria-label="Close painting details"
-          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-2xl leading-none text-slate-700 shadow transition hover:bg-white hover:text-black"
-          onClick={() => setPopupOpen(false)}
-          type="button"
-        >
-          <span aria-hidden="true">×</span>
-        </button>
+      <div className="flex h-[100dvh] max-h-[100dvh] w-full max-w-lg flex-col overflow-hidden bg-white text-slate-900 shadow-2xl sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:rounded-sm">
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 py-2">
+          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Artwork details</span>
+          <button
+            aria-label="Close painting details"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-2xl leading-none text-slate-700 transition hover:bg-slate-100 hover:text-black"
+            onClick={() => setPopupOpen(false)}
+            type="button"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="relative flex w-full items-center justify-center bg-slate-100 p-6 sm:p-8">
             <img
               alt={popupItem.name}
-              className={`max-h-[50vh] max-w-full object-contain shadow-md transition ${
+              className={`max-h-[38dvh] max-w-full object-contain shadow-md transition sm:max-h-[50vh] ${
                 selected ? "" : "saturate-[.65]"
               }`}
               src={popupItem.src}
@@ -145,7 +148,7 @@ export default function PaintingPopup({
           </div>
         </div>
 
-        <div className="shrink-0 border-t border-slate-200 bg-white p-4 sm:px-8 sm:py-5">
+        <div className="shrink-0 border-t border-slate-200 bg-white p-4 sm:px-8 sm:py-5" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
           <button
             className={`w-full px-5 py-3 text-sm font-semibold transition ${
               selected
