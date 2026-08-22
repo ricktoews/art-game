@@ -89,6 +89,7 @@ export default function Gallery() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
     let _artSelections = getArtSelections();
@@ -101,6 +102,13 @@ export default function Gallery() {
 
     const artSelections = sortGallery(_artSelections);
     setArtSelections(artSelections);
+  }, []);
+
+  useEffect(() => {
+    const updateBackToTop = () => setShowBackToTop(window.scrollY > 600);
+    updateBackToTop();
+    window.addEventListener("scroll", updateBackToTop, { passive: true });
+    return () => window.removeEventListener("scroll", updateBackToTop);
   }, []);
 
   const toggleItemSelect = () => {
@@ -201,23 +209,24 @@ export default function Gallery() {
 
   return (
     <Layout title="Art Gallery" toggleItemSelect={toggleItemSelect} setPopupOpen={setPopupOpen} popupOpen={popupOpen} popupItem={popupItem}>
-      <form className="relative mb-4 w-[calc(100%_-_2rem)] max-w-[640px]" onSubmit={submitSearch} role="search">
-        <label className="sr-only" htmlFor="gallery-search">Search the gallery</label>
-        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">⌕</span>
-        <input
-          className="w-full rounded-full border border-slate-300 bg-white py-2.5 pl-10 pr-32 text-sm text-slate-800 shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
-          id="gallery-search"
-          onChange={(event) => setSearchInput(event.target.value)}
-          onFocus={() => setOpenDropdown(null)}
-          placeholder="Search title, artist, style…"
-          type="text"
-          value={searchInput}
-        />
-        {searchInput || searchQuery ? (
-          <button aria-label="Clear search" className="absolute right-[4.75rem] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700" onClick={clearSearch} type="button">×</button>
-        ) : null}
-        <button className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full bg-emerald-700 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-600" type="submit">Search</button>
-      </form>
+      <div className="mb-4 h-[66px] w-full" aria-hidden="true" />
+      <form className="fixed left-1/2 top-[56px] z-[8] w-[calc(100%_-_2rem)] max-w-[640px] -translate-x-1/2 bg-white/95 py-3 backdrop-blur-sm" onSubmit={submitSearch} role="search">
+          <label className="sr-only" htmlFor="gallery-search">Search the gallery</label>
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">⌕</span>
+          <input
+            className="w-full rounded-full border border-slate-300 bg-white py-2.5 pl-10 pr-32 text-sm text-slate-800 shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+            id="gallery-search"
+            onChange={(event) => setSearchInput(event.target.value)}
+            onFocus={() => setOpenDropdown(null)}
+            placeholder="Search title, artist, style…"
+            type="text"
+            value={searchInput}
+          />
+          {searchInput || searchQuery ? (
+            <button aria-label="Clear search" className="absolute right-[4.75rem] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700" onClick={clearSearch} type="button">×</button>
+          ) : null}
+          <button className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full bg-emerald-700 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-600" type="submit">Search</button>
+        </form>
       <div className="relative z-[5] mb-8 flex flex-wrap justify-center rounded-2xl border border-slate-300 bg-white p-1 text-sm shadow-sm">
         <GalleryDropdown active={galleryView === "genre"} label="Genre" onSelect={(filter) => chooseGalleryGroup("genre", filter)} onToggle={(open) => setOpenDropdown(open ? "genre" : null)} open={openDropdown === "genre"} options={genreGroups.map((group) => group.genre)} />
         <GalleryDropdown active={galleryView === "style"} label="Style" onSelect={(filter) => chooseGalleryGroup("style", filter)} onToggle={(open) => setOpenDropdown(open ? "style" : null)} open={openDropdown === "style"} options={styleGroups.map((group) => group.style)} />
@@ -400,6 +409,17 @@ export default function Gallery() {
           </div>
         </section>
       )}
+
+      {showBackToTop ? (
+        <button
+          aria-label="Back to top"
+          className="fixed bottom-5 right-5 z-20 rounded-full bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          type="button"
+        >
+          ↑ Top
+        </button>
+      ) : null}
 
     </Layout>
   );
