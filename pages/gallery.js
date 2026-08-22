@@ -214,7 +214,7 @@ export default function Gallery() {
           <label className="sr-only" htmlFor="gallery-search">Search the gallery</label>
           <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">⌕</span>
           <input
-            className="w-full rounded-full border border-slate-300 bg-white py-2.5 pl-10 pr-32 text-sm text-slate-800 shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+            className="w-full rounded-full border border-slate-300 bg-white py-2.5 pl-10 pr-32 text-base text-slate-800 shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
             id="gallery-search"
             onChange={(event) => setSearchInput(event.target.value)}
             onFocus={() => setOpenDropdown(null)}
